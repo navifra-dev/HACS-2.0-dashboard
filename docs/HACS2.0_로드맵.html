@@ -102,7 +102,7 @@
 <div class="summary">
   <div class="s-card" style="border-color:#3D4FA6">
     <div class="month">3월</div>
-    <div class="desc">VDA5050 시뮬레이션 주행<br/>지도·경로·통신 기반 구축</div>
+    <div class="desc">VDA5050 시뮬레이션 주행<br/><small style="color:#6B7280;">(Verification Toolkit 사용)</small><br/>지도·경로·통신 기반 구축</div>
   </div>
   <div class="s-card" style="border-color:#3D4FA6">
     <div class="month">4월</div>
@@ -164,7 +164,7 @@ const COLORS = { "기획":"#8B9AD8", "ACS":"#2B3990", "UI":"#5A6BC4", "PLC":"#4A
 const items = [
   { track:"기획", name:"기획 및 화면 설계", s:0, e:13, robot:"" },
   { track:"기획", name:"화면 설계 (IA/Wireframe/UI Spec)", s:6, e:15, robot:"" },
-  { track:"ACS", name:"VDA5050 시뮬레이션 주행", s:6, e:11, robot:"단일" },
+  { track:"ACS", name:"VDA5050 시뮬레이션 주행 (Verification Toolkit 사용)", s:6, e:11, robot:"단일" },
   { track:"ACS", name:"미션 할당 + PLC 연동", s:12, e:15, robot:"단일" },
   { track:"ACS", name:"경로 계획 + 충돌 회피 + ETA", s:16, e:19, robot:"멀티" },
   { track:"ACS", name:"트래픽 확장 + 수동제어/충전", s:20, e:23, robot:"멀티" },
@@ -184,7 +184,7 @@ const items = [
 
 // 마일스톤 포인트 (주요 체크포인트) — 카테고리별 하위 내용 + 요구사항 ID
 const milestones = [
-  { week: 11, label: "[단일 로봇] 시뮬레이션 주행", subs: [
+  { week: 11, label: "[단일 로봇] 시뮬레이션 주행 (Verification Toolkit 사용)", subs: [
     { track:"ACS", text:"VDA5050 단일 주행 시연 · 아키텍처 설계 · SDD · 개발환경 구축", reqs:"1.1, 1.3, 1.4, 1.5, 1.11, 3.1, 9.1~9.5, 1000.1, 1000.2, 1002.2" },
     { track:"UI", text:"맵 편집기 MVP (노드·엣지 배치, 저장/불러오기)", reqs:"5.4, 5.6, 5.11, 1.1, 1.2" },
     { track:"PLC", text:"H-PLC 아키텍처 설계 · 가상 PLC 환경 구축", reqs:"6.1, 6.2" },
