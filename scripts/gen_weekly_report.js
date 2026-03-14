@@ -1,6 +1,31 @@
 const pptxgen = require("pptxgenjs");
 const fs = require("fs");
 
+// ── data.js 공유 데이터 연동 ────────────────────────────────
+const { tasks, milestones, todayWeek: DATA_WEEK } = require("../docs/data.js");
+
+// 진척률 자동 계산 (tasks 배열 기반)
+const _all    = tasks.filter(t => !t.cat);
+const _done   = _all.filter(t => t.st === "done");
+const _prog   = _all.filter(t => t.st === "progress");
+const _todo   = _all.filter(t => t.st === "todo");
+const _rate   = _all.length > 0 ? _done.length / _all.length : 0;
+const _planned= _all.filter(t => t.e <= DATA_WEEK).length;
+const _planR  = _all.length > 0 ? _planned / _all.length : 0;
+const _gap    = _rate - _planR;
+
+// 트랙별 집계
+const _td = {};
+["기획","ACS","UI","PLC","통합"].forEach(tr => {
+  const t = _all.filter(t => t.track === tr);
+  _td[tr] = { done: t.filter(t => t.st === "done").length, total: t.length };
+});
+
+// 지연 항목: 종료주 지난 미완료
+const _delayed = _all.filter(t => t.e < DATA_WEEK && t.st !== "done");
+// 다음 주 착수 예정: 시작주가 이번~다음 주인 todo
+const _upcoming = _all.filter(t => t.s >= DATA_WEEK && t.s <= DATA_WEEK + 1 && t.st === "todo");
+
 const OUTPUT_PM = "/home/sally/claude_cowork/HACS2.0_주간보고_11주차.pptx"; // v4 — 기획 행 공란
 const TODAY = "2026.03.14";
 const PERIOD = "2026년 3월 2주차 (3/9~3/13)";
@@ -398,13 +423,13 @@ let s9 = pres.addSlide();
 s9.background = { color: NGR };
 s9.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:10,h:0.8,fill:{color:NN}});
 s9.addText("마일스톤 진척률",{x:0.7,y:0,w:5.5,h:0.8,fontSize:20,fontFace:"Calibri",color:NW,bold:true,valign:"middle",margin:0});
-s9.addText("W11 기준 (2026.03.14)  |  전체 81개 Task",{x:4.5,y:0,w:5.2,h:0.8,fontSize:11,fontFace:"Calibri",color:"93B5D8",align:"right",valign:"middle",margin:0});
+s9.addText(`W${DATA_WEEK+1} 기준 (${TODAY})  |  전체 ${_all.length}개 Task`,{x:4.5,y:0,w:5.2,h:0.8,fontSize:11,fontFace:"Calibri",color:"93B5D8",align:"right",valign:"middle",margin:0});
 
 const mk=[
-  {l:"전체 완료율",v:"2.5%",s:"2/81 Task",c:NGN},
-  {l:"진행 중",   v:"13건", s:"13개 Task",c:NB},
-  {l:"대기",       v:"66건", s:"미착수",   c:NDGR},
-  {l:"계획 대비 갭",v:"−4.9%p",s:"계획 7.4%",c:NRED},
+  {l:"전체 완료율", v:`${(_rate*100).toFixed(1)}%`,   s:`${_done.length}/${_all.length} Task`, c:NGN},
+  {l:"진행 중",    v:`${_prog.length}건`,              s:`${_prog.length}개 Task`,              c:NB},
+  {l:"대기",       v:`${_todo.length}건`,              s:"미착수",                               c:NDGR},
+  {l:"계획 대비 갭",v:`${_gap>=0?"+":""}${(_gap*100).toFixed(1)}%p`, s:`계획 ${(_planR*100).toFixed(1)}%`, c:_gap>=0?NGN:NRED},
 ];
 mk.forEach((k,i)=>{
   const x=0.5+i*2.3;
@@ -418,7 +443,7 @@ mk.forEach((k,i)=>{
 s9.addShape(pres.shapes.RECTANGLE,{x:0.5,y:2.3,w:5.5,h:3.0,fill:{color:NW},shadow:shade()});
 s9.addText("트랙별 완료율",{x:0.7,y:2.42,w:5,h:0.3,fontSize:12,fontFace:"Calibri",color:NN,bold:true,margin:0});
 const tc={"기획":NPUR,"ACS":NGN,"UI":NB,"PLC":NAMB,"통합":NTEAL};
-const td={"기획":{done:1,total:3},"ACS":{done:1,total:32},"UI":{done:0,total:21},"PLC":{done:0,total:19},"통합":{done:0,total:6}};
+const td=_td; // data.js에서 자동 계산
 Object.entries(td).forEach(([tr,d],i)=>{
   const y=2.85+i*0.45; const r=d.total>0?d.done/d.total:0;
   s9.addText(tr,{x:0.7,y,w:0.8,h:0.32,fontSize:9,fontFace:"Calibri",color:NDARK,bold:true,valign:"middle",margin:0});
@@ -430,17 +455,21 @@ Object.entries(td).forEach(([tr,d],i)=>{
 
 s9.addShape(pres.shapes.RECTANGLE,{x:6.2,y:2.3,w:3.3,h:3.0,fill:{color:NW},shadow:shade()});
 s9.addText("지연 · 위험 항목",{x:6.4,y:2.42,w:3.0,h:0.3,fontSize:12,fontFace:"Calibri",color:NN,bold:true,margin:0});
-s9.addShape(pres.shapes.RECTANGLE,{x:6.3,y:2.85,w:0.55,h:0.22,fill:{color:NRED}});
-s9.addText("지연",{x:6.3,y:2.85,w:0.55,h:0.22,fontSize:7.5,fontFace:"Calibri",color:NW,bold:true,align:"center",valign:"middle",margin:0});
-s9.addText("P-02 시스템 아키텍처 설계",{x:6.9,y:2.85,w:2.5,h:0.22,fontSize:8.5,fontFace:"Calibri",color:NDARK,valign:"middle",margin:0});
-s9.addText("종료 W8 초과 → 다음 주 완료 처리 목표",{x:6.9,y:3.08,w:2.5,h:0.2,fontSize:7.5,fontFace:"Calibri",color:NDGR,margin:0});
+// 지연 항목 자동 표시 (data.js 기반)
+_delayed.slice(0,2).forEach((t,i)=>{
+  const y=2.82+i*0.52;
+  s9.addShape(pres.shapes.RECTANGLE,{x:6.3,y,w:0.55,h:0.22,fill:{color:NRED}});
+  s9.addText("지연",{x:6.3,y,w:0.55,h:0.22,fontSize:7.5,fontFace:"Calibri",color:NW,bold:true,align:"center",valign:"middle",margin:0});
+  s9.addText(`${t.id} ${t.name}`,{x:6.9,y,w:2.5,h:0.22,fontSize:8,fontFace:"Calibri",color:NDARK,valign:"middle",margin:0});
+  s9.addText(`종료 W${t.e+1} 초과 → 진행 중`,{x:6.9,y:y+0.23,w:2.5,h:0.18,fontSize:7,fontFace:"Calibri",color:NDGR,margin:0});
+});
 s9.addText("다음 주 착수 예정",{x:6.4,y:3.4,w:3.0,h:0.25,fontSize:9,fontFace:"Calibri",color:NN,bold:true,margin:0});
-[{id:"U-04",n:"PLC 객체 DB 관리 UI",w:"W10"},{id:"L-03",n:"PLC 객체 등록/수정/삭제 API",w:"W10"},{id:"L-04",n:"Polling TAG 수집 구현",w:"W11"},{id:"L-05",n:"Pub/Sub TAG 수집 구현",w:"W11"}]
-.forEach((u,i)=>{
+// 착수 예정 항목 자동 표시 (data.js 기반)
+_upcoming.slice(0,4).forEach((u,i)=>{
   const y=3.7+i*0.35;
   s9.addShape(pres.shapes.RECTANGLE,{x:6.3,y:y+0.02,w:0.45,h:0.2,fill:{color:NAMB}});
-  s9.addText(u.w,{x:6.3,y:y+0.02,w:0.45,h:0.2,fontSize:7,fontFace:"Calibri",color:NW,bold:true,align:"center",valign:"middle",margin:0});
-  s9.addText(`${u.id} ${u.n}`,{x:6.8,y,w:2.6,h:0.3,fontSize:8,fontFace:"Calibri",color:NDARK,valign:"middle",margin:0});
+  s9.addText(`W${u.s+1}`,{x:6.3,y:y+0.02,w:0.45,h:0.2,fontSize:7,fontFace:"Calibri",color:NW,bold:true,align:"center",valign:"middle",margin:0});
+  s9.addText(`${u.id} ${u.name}`,{x:6.8,y,w:2.6,h:0.3,fontSize:8,fontFace:"Calibri",color:NDARK,valign:"middle",margin:0});
 });
 
 // ══════════════════════════════════════════════

@@ -1,6 +1,13 @@
 const pptxgen = require("pptxgenjs");
 const fs = require("fs");
 
+// ── data.js 공유 데이터 연동 ────────────────────────────────
+const { tasks, milestones, todayWeek: DATA_WEEK } = require("../docs/data.js");
+const _all  = tasks.filter(t => !t.cat);
+const _done = _all.filter(t => t.st === "done");
+const _prog = _all.filter(t => t.st === "progress");
+const _rate = _all.length > 0 ? _done.length / _all.length : 0;
+
 const PERIOD = "2026년 3월 2주차 (3/9~3/13)";
 const OUTPUT = "/home/sally/claude_cowork/HACS2.0_주간보고_고객사_11주차.pptx";
 const TODAY = "2026.03.14";
@@ -176,7 +183,7 @@ const statusCards = [
   { label: "ACS Map Service", status: "개발 완료", color: GREEN, detail: "6계층 아키텍처 기반 핵심 서비스 완성" },
   { label: "DB 설계서 v0.3", status: "완성", color: TEAL, detail: "14개 테이블 확정 (2026-03-13 최종 수정)" },
   { label: "UI/UX", status: "고도화 진행", color: BLUE, detail: "Audit Log, Swagger, Desktop 통합 완료" },
-  { label: "전체 진행률", status: "2.5%", color: PURPLE, detail: "81개 Task 중 2완료, 13진행" }
+  { label: "전체 진행률", status: `${(_rate*100).toFixed(1)}%`, color: PURPLE, detail: `${_all.length}개 Task 중 ${_done.length}완료, ${_prog.length}진행` }
 ];
 statusCards.forEach((card, i) => {
   const x = 0.5 + i * 2.3;

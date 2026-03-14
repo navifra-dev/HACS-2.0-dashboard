@@ -242,3 +242,10 @@ const milestones = [
     { track:"통합", text:"울산 공장 현장 배포 · 운영 테스트 · 최종 검수 보고서", reqs:"" },
   ]},
 ];
+
+// ============================================================
+// Node.js 호환 (require()로 불러오기 가능)
+// ============================================================
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { tasks, items, milestones, todayWeek, months, totalWeeks, COLORS, checkpoints, ALL_REQ_IDS, REQ_NAMES };
+}
