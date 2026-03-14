@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>H-ACS 2.0 대시보드</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Segoe UI", "Noto Sans KR", sans-serif; background: #F1F5F9; }
+
+  header {
+    background: #1A2744;
+    padding: 0 32px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  header .logo { color: #fff; font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+  header .logo span { color: #2563EB; }
+  header .date { color: #93B5D8; font-size: 12px; }
+
+  .nav {
+    background: #fff;
+    border-bottom: 1px solid #E2E8F0;
+    display: flex;
+    gap: 0;
+    padding: 0 32px;
+  }
+  .nav a {
+    display: block;
+    padding: 14px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748B;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s;
+  }
+  .nav a:hover { color: #1A2744; }
+  .nav a.active { color: #2563EB; border-bottom-color: #2563EB; }
+
+  .frame-wrap {
+    display: none;
+    width: 100%;
+    height: calc(100vh - 103px);
+  }
+  .frame-wrap.active { display: block; }
+  .frame-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .home-wrap {
+    display: none;
+    padding: 32px;
+  }
+  .home-wrap.active { display: block; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    max-width: 960px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px;
+    border-top: 4px solid #2563EB;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+    text-decoration: none;
+  }
+  .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+  .card h3 { font-size: 14px; color: #1A2744; font-weight: 700; margin-bottom: 6px; }
+  .card p { font-size: 12px; color: #94A3B8; }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1A2744;
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">NAVIFRA <span>|</span> H-ACS 2.0</div>
+  <div class="date" id="today-date"></div>
+</header>
+
+<nav class="nav">
+  <a href="#" class="active" data-tab="home">홈</a>
+  <a href="#" data-tab="milestone">마일스톤</a>
+  <a href="#" data-tab="roadmap">로드맵</a>
+  <a href="#" data-tab="trend">진척률 트렌드</a>
+  <a href="#" data-tab="checklist">주간 체크리스트</a>
+  <a href="#" data-tab="artifacts">산출물 관리</a>
+</nav>
+
+<div id="home" class="home-wrap active">
+  <div class="section-title">H-ACS 2.0 프로젝트 대시보드</div>
+  <div class="cards">
+    <a class="card" href="#" data-tab="milestone" style="border-color:#1A2744;">
+      <h3>📊 마일스톤</h3>
+      <p>전체 Task 진척률 및 간트 차트</p>
+    </a>
+    <a class="card" href="#" data-tab="roadmap" style="border-color:#2563EB;">
+      <h3>🗺️ 로드맵</h3>
+      <p>월별 개발 로드맵 및 마일스톤</p>
+    </a>
+    <a class="card" href="#" data-tab="trend" style="border-color:#0D9488;">
+      <h3>📈 진척률 트렌드</h3>
+      <p>주차별 완료율 추이</p>
+    </a>
+    <a class="card" href="#" data-tab="checklist" style="border-color:#7C3AED;">
+      <h3>✅ 주간 체크리스트</h3>
+      <p>이번 주 완료 항목 확인</p>
+    </a>
+    <a class="card" href="#" data-tab="artifacts" style="border-color:#D97706;">
+      <h3>📁 산출물 관리</h3>
+      <p>SDD, DB 설계서 등 산출물 현황</p>
+    </a>
+  </div>
+</div>
+
+<div id="milestone" class="frame-wrap">
+  <iframe src="HACS2.0_마일스톤_2026.html"></iframe>
+</div>
+<div id="roadmap" class="frame-wrap">
+  <iframe src="HACS2.0_로드맵.html"></iframe>
+</div>
+<div id="trend" class="frame-wrap">
+  <iframe src="HACS2.0_진척률_트렌드.html"></iframe>
+</div>
+<div id="checklist" class="frame-wrap">
+  <iframe src="HACS2.0_주간체크리스트.html"></iframe>
+</div>
+<div id="artifacts" class="frame-wrap">
+  <iframe src="HACS2.0_산출물_관리.html"></iframe>
+</div>
+
+<script>
+  // 날짜
+  const d = new Date();
+  document.getElementById('today-date').textContent =
+    `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} 기준`;
+
+  // 탭 전환
+  function switchTab(tabId) {
+    document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+    document.querySelectorAll('.frame-wrap, .home-wrap').forEach(el => el.classList.remove('active'));
+    document.querySelector(`[data-tab="${tabId}"]`)?.classList.add('active');
+    document.getElementById(tabId)?.classList.add('active');
+  }
+
+  document.querySelectorAll('[data-tab]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      switchTab(el.dataset.tab);
+    });
+  });
+</script>
+</body>
+</html>
