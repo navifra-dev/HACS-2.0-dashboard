@@ -80,6 +80,7 @@
   @media print { .export-bar { display: none; } }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="data.js"></script>
 </head>
 <body>
 
@@ -155,79 +156,6 @@
 </div><!-- /capture-full -->
 
 <script>
-const months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월"];
-const totalWeeks = 40;
-const todayWeek = 10; // W11 (2026.03.14 기준)
-const COLORS = { "기획":"#8B9AD8", "ACS":"#2B3990", "UI":"#5A6BC4", "PLC":"#4A5BC7", "통합":"#1E2A78" };
-
-// 고객용 큰 업무 항목 (카테고리 단위)
-const items = [
-  { track:"기획", name:"기획 및 화면 설계", s:0, e:13, robot:"" },
-  { track:"기획", name:"화면 설계 (IA/Wireframe/UI Spec)", s:6, e:15, robot:"" },
-  { track:"ACS", name:"VDA5050 시뮬레이션 주행 (Verification Toolkit 사용)", s:6, e:11, robot:"단일" },
-  { track:"ACS", name:"미션 할당 + PLC 연동", s:12, e:15, robot:"단일" },
-  { track:"ACS", name:"경로 계획 + 충돌 회피 + ETA", s:16, e:19, robot:"멀티" },
-  { track:"ACS", name:"트래픽 확장 + 수동제어/충전", s:20, e:23, robot:"멀티" },
-  { track:"ACS", name:"부하 테스트 + 통합 관제", s:24, e:27, robot:"멀티" },
-  { track:"UI", name:"맵 편집기", s:4, e:15, robot:"" },
-  { track:"UI", name:"로봇·미션 화면", s:12, e:23, robot:"" },
-  { track:"UI", name:"고급 편집·관제", s:18, e:27, robot:"" },
-  { track:"UI", name:"부가 기능 (Playback/통계/Alarm)", s:22, e:29, robot:"" },
-  { track:"PLC", name:"PLC 환경 구축 + OPC UA 기반", s:7, e:15, robot:"" },
-  { track:"PLC", name:"TAG 수집 + 그룹 관리 + 인터락", s:14, e:19, robot:"" },
-  { track:"PLC", name:"대규모 연동 + 안정성 (150 PLC)", s:16, e:29, robot:"" },
-  { track:"통합", name:"실 로봇 연계 + E2E 통합", s:28, e:35, robot:"실 로봇" },
-  { track:"통합", name:"화성 공장 현장 OLT", s:28, e:31, robot:"현장" },
-  { track:"통합", name:"천안아산 공장 현장 적용", s:32, e:35, robot:"현장" },
-  { track:"통합", name:"울산 공장 현장 적용 (OLT)", s:36, e:39, robot:"현장" },
-];
-
-// 마일스톤 포인트 (주요 체크포인트) — 카테고리별 하위 내용 + 요구사항 ID
-const milestones = [
-  { week: 11, label: "[단일 로봇] 시뮬레이션 주행 (Verification Toolkit 사용)", subs: [
-    { track:"ACS", text:"VDA5050 단일 주행 시연 · 아키텍처 설계 · SDD · 개발환경 구축", reqs:"1.1, 1.3, 1.4, 1.5, 1.11, 3.1, 9.1~9.5, 1000.1, 1000.2, 1002.2" },
-    { track:"UI", text:"맵 편집기 MVP (노드·엣지 배치, 저장/불러오기)", reqs:"5.4, 5.6, 5.11, 1.1, 1.2" },
-    { track:"PLC", text:"H-PLC 아키텍처 설계 · 가상 PLC 환경 구축", reqs:"6.1, 6.2" },
-    { track:"기획", text:"요구사항 정의 · DB ERD 설계", reqs:"" },
-  ]},
-  { week: 15, label: "[단일 로봇] 미션 할당 + PLC 연동", subs: [
-    { track:"ACS", text:"단일 미션 할당 · PLC 연동 미션 · VDA5050 프로토콜 완료", reqs:"2.1, 2.5, 2.6, 20.1, 1001.1, 4.2, 18.1" },
-    { track:"PLC", text:"OPC UA 연결 · TAG 수집 기초 · PLC 객체 API · OPC-UA SW 150대 검증 영상 필요 (EVENT vs Polling 방식 차이)", reqs:"6.1, 6.2, 23.2, 23.3, 1003.2" },
-    { track:"UI", text:"맵 편집기 완성 · PLC 객체 관리 UI", reqs:"5.7, 5.8, 5.9, 1003.2, 1003.3" },
-    { track:"기획", text:"화면 설계 (IA/Wireframe) 1차 완료", reqs:"" },
-  ]},
-  { week: 19, label: "[멀티 로봇] 경로 계획 + 충돌 회피", subs: [
-    { track:"ACS", text:"멀티 동시 주행 · 다중 경로 계획 · 충돌 회피 · ETA 추정", reqs:"4.1, 4.6~4.9, 19.1, 22.1, 24.1~24.7" },
-    { track:"PLC", text:"TAG 그룹핑 · 인터락 조건 · Polling vs Pub/Sub 성능 검증", reqs:"23.1, 6.2" },
-    { track:"UI", text:"로봇·미션 실시간 대시보드 · 미션 생성/관리", reqs:"1006.1, 1004.1, 1004.2, 2.1, 2.3, 5.10" },
-  ]},
-  { week: 23, label: "[멀티 로봇] 운영 데모", subs: [
-    { track:"ACS", text:"트래픽 확장 · 수동제어 · 자동충전 · ETA 학습", reqs:"1002.1, 1002.3~1002.6, 7.1, 7.2" },
-    { track:"PLC", text:"150 PLC 동시 접속 · 1,500 TAG 분산 Reading · Failover", reqs:"6.2, 23.1, 23.2, 23.3" },
-    { track:"UI", text:"고급 맵 편집 · 관제 화면 · 수동제어 UI", reqs:"1.12~1.14, 5.12~5.16, 11.1, 11.2, 12.1" },
-  ]},
-  { week: 27, label: "[멀티 로봇] 부하 테스트 완료", subs: [
-    { track:"ACS", text:"멀티 트래픽 최적화 · 서버 안정성 · 부하 테스트 보고서", reqs:"4.1, 13.1, 13.2, 1005.1, 1005.2, 15.1" },
-    { track:"PLC", text:"H-PLC 다중 인스턴스 · 단일 서버 통합 · Write 기능", reqs:"6.1, 1003.2" },
-    { track:"UI", text:"Playback · 통계/차트 · Alarm 모니터링 · 부가 기능 완성", reqs:"15.1~15.4, 14.1a~14.4, 16.1, 1005.1" },
-  ]},
-  { week: 33, label: "실 로봇 E2E 테스트", subs: [
-    { track:"ACS", text:"VDA5050 실 로봇 통신 검증", reqs:"" },
-    { track:"PLC", text:"실 PLC 장비 연동 검증", reqs:"" },
-    { track:"UI", text:"전체 UI 통합 테스트", reqs:"" },
-    { track:"통합", text:"ACS↔UI↔PLC 전체 연계 E2E 시나리오 검증", reqs:"" },
-  ]},
-  { week: 31, label: "화성 공장 OLT 완료 (8월)", subs: [
-    { track:"통합", text:"화성 공장 현장 배포 · 운영 테스트", reqs:"" },
-  ]},
-  { week: 35, label: "천안아산 공장 현장 적용 완료 (9월)", subs: [
-    { track:"통합", text:"천안아산 공장 현장 배포 · 운영 테스트", reqs:"" },
-  ]},
-  { week: 39, label: "울산 공장 OLT 완료 (10월)", subs: [
-    { track:"통합", text:"울산 공장 현장 배포 · 운영 테스트 · 최종 검수 보고서", reqs:"" },
-  ]},
-];
-
 function weekToLabel(w) {
   const m = Math.floor(w / 4);
   const wk = (w % 4) + 1;
@@ -253,7 +181,7 @@ function render() {
   // 바디
   let body = "";
   items.forEach(item => {
-    const color = COLORS[item.track] || "#888";
+    const color = (COLORS[item.track] || {bg:"#888"}).bg;
     body += `<tr>`;
     body += `<td class="item-name"><span class="track-tag" style="background:${color}">${item.track}</span>${item.name}`;
     if (item.robot) body += `<span class="robot">${item.robot}</span>`;
@@ -293,7 +221,7 @@ function render() {
   timeline.innerHTML = milestones.map((ms, i) => {
     const isPast = ms.week < todayWeek;
     const subsHtml = (ms.subs || []).map(sub => {
-      const c = COLORS[sub.track] || "#888";
+      const c = (COLORS[sub.track] || {bg:"#888"}).bg;
       const reqsHtml = sub.reqs ? `<span class="ms-reqs">[${sub.reqs}]</span>` : "";
       return `<div class="ms-cat"><span class="ms-cat-tag" style="background:${c}">${sub.track}</span><span class="ms-cat-text">${sub.text} ${reqsHtml}</span></div>`;
     }).join("");
