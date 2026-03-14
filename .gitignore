@@ -1,0 +1,11 @@
+# PPTX 출력물 (용량 크고 매주 재생성됨)
+output/*.pptx
+output/*.pdf
+
+# Node
+node_modules/
+package-lock.json
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>H-ACS 2.0 진척률 트렌드 대시보드</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; background: #f0f2f5; color: #333; }
+
+  .header { background: linear-gradient(135deg, #1E2A78 0%, #3D4FA6 60%, #5A6BC4 100%); color: #fff; padding: 28px 40px; }
+  .header h1 { font-size: 22px; font-weight: 700; }
+  .header .sub { font-size: 13px; color: #8B9AD8; margin-top: 6px; }
+  .header .sync-info { font-size: 11px; color: #8B9AD8; margin-top: 4px; }
+
+  .controls { display: flex; gap: 10px; padding: 16px 40px; flex-wrap: wrap; align-items: center; }
+  .btn { padding: 6px 16px; border-radius: 20px; border: 1px solid #ccc; background: #fff; cursor: pointer; font-size: 12px; transition: all .2s; }
+  .btn:hover { border-color: #3D4FA6; color: #3D4FA6; }
+  .btn.primary { background: #3D4FA6; color: #fff; border-color: #3D4FA6; }
+  .btn.primary:hover { background: #1E2A78; }
+  .btn.warning { background: #ff9800; color: #fff; border-color: #ff9800; }
+  .btn.warning:hover { background: #f57c00; }
+
+  .kpi-row { display: flex; gap: 14px; padding: 12px 40px; flex-wrap: wrap; }
+  .kpi { background: #fff; border-radius: 10px; padding: 18px 22px; flex: 1; min-width: 150px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .kpi .label { font-size: 11px; color: #888; margin-bottom: 4px; }
+  .kpi .value { font-size: 30px; font-weight: 700; }
+  .kpi .sub { font-size: 11px; color: #888; margin-top: 4px; }
+  .kpi .bar { height: 4px; border-radius: 2px; background: #e0e0e0; margin-top: 10px; }
+  .kpi .bar .fill { height: 100%; border-radius: 2px; transition: width .5s; }
+
+  .section { margin: 0 40px 20px; background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08); overflow: hidden; }
+  .section-head { padding: 16px 20px; font-size: 14px; font-weight: 700; color: #2B3990; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 8px; }
+  .section-body { padding: 20px; }
+
+  /* Charts */
+  .chart-container { position: relative; width: 100%; }
+  canvas { width: 100% !important; }
+
+  /* Risk table */
+  .risk-table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  .risk-table th { background: #edf2f7; color: #2B3990; padding: 10px 14px; text-align: left; font-weight: 600; }
+  .risk-table td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; }
+  .risk-table tr:hover { background: #f8fafc; }
+  .risk-badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+  .risk-high { background: #ffebee; color: #c62828; }
+  .risk-mid { background: #fff3e0; color: #e65100; }
+  .risk-low { background: #e8f5e9; color: #2e7d32; }
+  .risk-ok { background: #E8EAF6; color: #3D4FA6; }
+
+  /* Track progress bars */
+  .track-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+  .track-row:last-child { border-bottom: none; }
+  .track-label { width: 70px; font-size: 12px; font-weight: 600; }
+  .track-bar { flex: 1; height: 20px; background: #e0e0e0; border-radius: 4px; overflow: hidden; position: relative; }
+  .track-fill-done { height: 100%; position: absolute; left: 0; top: 0; border-radius: 4px 0 0 4px; transition: width .5s; }
+  .track-fill-progress { height: 100%; position: absolute; top: 0; transition: all .5s; }
+  .track-fill-expected { height: 100%; position: absolute; top: 0; background: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0,0,0,.05) 3px, rgba(0,0,0,.05) 6px); border-right: 2px dashed #ff5722; }
+  .track-pct { width: 60px; text-align: right; font-size: 12px; font-weight: 600; }
+
+  /* Snapshot history */
+  .snap-table { border-collapse: collapse; width: 100%; font-size: 11px; }
+  .snap-table th { background: #edf2f7; color: #2B3990; padding: 8px 10px; text-align: center; font-weight: 600; }
+  .snap-table td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; text-align: center; }
+  .snap-table tr:hover { background: #f8fafc; }
+  .delta-up { color: #2e7d32; font-weight: 600; }
+  .delta-down { color: #c62828; font-weight: 600; }
+
+  /* Weekly report preview */
+  .report-preview { background: #1e1e1e; color: #e0e0e0; border-radius: 8px; padding: 16px; font-family: 'Consolas', monospace; font-size: 12px; line-height: 1.8; white-space: pre-wrap; max-height: 400px; overflow-y: auto; }
+  .btn-copy { display: inline-block; padding: 6px 16px; background: #3D4FA6; color: #fff; border: none; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; margin-top: 12px; }
+  .btn-copy:hover { background: #1E2A78; }
+
+  .legend-row { display: flex; gap: 20px; padding: 10px 20px; font-size: 11px; color: #666; border-top: 1px solid #eee; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-color { width: 20px; height: 8px; border-radius: 3px; }
+
+  @media (max-width: 900px) {
+    .kpi-row, .controls { padding-left: 16px; padding-right: 16px; }
+    .section { margin-left: 16px; margin-right: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>H-ACS 2.0 진척률 트렌드 대시보드</h1>
+  <div class="sub">마일스톤 기반 계획 대비 실제 진행률 추적 · 지연 위험 감지</div>
+  <div class="sync-info" id="syncInfo">마지막 동기화: —</div>
+</div>
+
+<div class="controls">
+  <button class="btn primary" onclick="takeSnapshot()">📸 이번 주 스냅샷 저장</button>
+  <button class="btn" onclick="exportReportText()">📋 주간보고 텍스트 생성</button>
+  <button class="btn" onclick="document.getElementById('jsonFileInput').click()" style="border-color:#6a1b9a; color:#6a1b9a;">📂 마일스톤 JSON 동기화</button>
+  <input type="file" id="jsonFileInput" accept=".json" style="display:none" onchange="syncFromJSON(event)">
+  <button class="btn warning" onclick="clearSnapshots()">🗑 스냅샷 초기화</button>
+  <span id="syncStatus" style="font-size:11px; color:#2e7d32; font-weight:600;"></span>
+  <span style="margin-left:auto; font-size:11px; color:#888;">현재 주차: <strong id="currentWeekLabel">W9</strong> (3월 2주)</span>
+</div>
+
+<!-- KPI 카드 -->
+<div class="kpi-row" id="kpiRow"></div>
+
+<!-- 트랙별 진행률 -->
+<div class="section">
+  <div class="section-head">📊 트랙별 진행률 (계획 대비 실제)</div>
+  <div class="section-body" id="trackBars"></div>
+  <div class="legend-row">
+    <div class="legend-item"><div class="legend-color" style="background:#2e7d32"></div> 완료 (done)</div>
+    <div class="legend-item"><div class="legend-color" style="background:#5A6BC4"></div> 진행중 (progress)</div>
+    <div class="legend-item"><div class="legend-color" style="background:repeating-linear-gradient(45deg,#e0e0e0,#e0e0e0 3px,#ccc 3px,#ccc 6px); border-right:2px dashed #ff5722"></div> 계획 기대치</div>
+  </div>
+</div>
+
+<!-- 번다운 차트 -->
+<div class="section">
+  <div class="section-head">📈 진척률 트렌드 (주차별)</div>
+  <div class="section-body">
+    <div class="chart-container">
+      <canvas id="trendChart" height="280"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- 지연 위험 항목 -->
+<div class="section">
+  <div class="section-head">⚠️ 지연 위험 항목</div>
+  <div class="section-body">
+    <table class="risk-table" id="riskTable">
+      <thead><tr><th>ID</th><th>업무명</th><th>트랙</th><th>계획 종료</th><th>상태</th><th>위험도</th><th>비고</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 스냅샷 히스토리 -->
+<div class="section">
+  <div class="section-head">📅 주차별 스냅샷 기록</div>
+  <div class="section-body">
+    <table class="snap-table" id="snapTable">
+      <thead><tr><th>주차</th><th>날짜</th><th>전체 완료</th><th>전체 진행중</th><th>전체 대기</th><th>완료율</th><th>변화</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 주간보고 텍스트 -->
+<div class="section" id="reportSection" style="display:none">
+  <div class="section-head">📋 주간보고용 마일스톤 현황 텍스트</div>
+  <div class="section-body">
+    <div class="report-preview" id="reportPreview"></div>
+    <button class="btn-copy" onclick="copyReport()">📑 클립보드 복사</button>
+  </div>
+</div>
+
+<script>
+// ============================================
+// 마일스톤 데이터 (HACS2.0_마일스톤에서 동기화)
+// ============================================
+const months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월"];
+const totalWeeks = 40;
+const todayWeek = 9; // 3월 2주 (매주 업데이트)
+
+const TRACK_COLORS = {
+  "기획": "#8B9AD8", "ACS": "#2B3990", "UI": "#5A6BC4", "PLC": "#4A5BC7", "통합": "#1E2A78"
+};
+
+const tasks = [
+  // ===== 기획 트랙 =====
+  {track:"기획", name:"요구사항 정의 및 문서화", id:"P-01", s:0, e:5, st:"done"},
+  {track:"기획", name:"데이터 모델링 및 DB 설계 (ERD)", id:"P-03", s:4, e:10, st:"progress"},
+  {track:"기획", name:"화면 설계 (IA/Wireframe/UI Spec)", id:"P-08", s:6, e:15, st:"progress"},
+
+  // ===== ACS 트랙 =====
+  {track:"ACS", name:"시스템 아키텍처 설계 (Clean Architecture)", id:"P-02", s:1, e:8, st:"progress"},
+  {track:"ACS", name:"개발환경 구축 (Docker/CI/CD)", id:"P-04", s:0, e:7, st:"done"},
+  {track:"ACS", name:"SDD 문서 작성 (클래스 다이어그램)", id:"P-05", s:6, e:10, st:"progress"},
+  {track:"ACS", name:"VDA5050 프로토콜 분석 및 설계", id:"P-06", s:7, e:13, st:"progress"},
+  {track:"ACS", name:"지도 메시지 개발 (Map/Area/Portal)", id:"A-01", s:6, e:10, st:"progress"},
+  {track:"ACS", name:"VDA5050 통신 기반 구축 (MQTT Status/Visualization)", id:"A-02", s:7, e:11, st:"progress"},
+  {track:"ACS", name:"Backend API 연동 (로봇 등록/시스템 조회)", id:"A-03", s:7, e:11, st:"progress"},
+  {track:"ACS", name:"VDA5050 로봇 시뮬레이터 개발 (1대 단순 경로 주행)", id:"A-04", s:8, e:11, st:"progress"},
+  {track:"ACS", name:"경로 생성 기능 (A* / Dijkstra)", id:"A-05", s:8, e:11, st:"progress"},
+  {track:"ACS", name:"VDA5050 미션 할당 개발 (Order)", id:"A-06", s:12, e:15, st:"todo"},
+  {track:"ACS", name:"미션 추가/관리 기능", id:"A-07", s:12, e:15, st:"todo"},
+  {track:"ACS", name:"버퍼 미션 생성 로직", id:"A-07b", s:13, e:15, st:"todo"},
+  {track:"ACS", name:"로봇 접속/상태 관리 (VDA5050 기반)", id:"A-08", s:12, e:15, st:"todo"},
+  {track:"ACS", name:"Pallet 객체 DB 및 관리", id:"A-09", s:12, e:15, st:"todo"},
+  {track:"ACS", name:"PLC→Pallet 입고 이벤트 → 로봇 자동 배차", id:"A-10", s:13, e:15, st:"todo"},
+  {track:"ACS", name:"2대 트래픽 컨트롤 기초 (충돌 회피)", id:"A-11", s:14, e:15, st:"todo"},
+  {track:"ACS", name:"경로 계획 기능 (다중 로봇, 5대)", id:"A-12", s:16, e:19, st:"todo"},
+  {track:"ACS", name:"충돌 예측 / 우선순위 / 점유 테이블", id:"A-13", s:16, e:19, st:"todo"},
+  {track:"ACS", name:"미션 할당 전략 (최적 로봇 선택, 5대)", id:"A-14", s:16, e:19, st:"todo"},
+  {track:"ACS", name:"미션 컨디션 / 템플릿 / 복사", id:"A-15", s:17, e:19, st:"todo"},
+  {track:"ACS", name:"ETA 추정 계산 기능 (경로 기반 도착 예정 시간)", id:"A-16", s:16, e:19, st:"todo"},
+  {track:"ACS", name:"시스템 상태/파라미터 관리", id:"A-17", s:16, e:19, st:"todo"},
+  {track:"ACS", name:"10~20대 트래픽 컨트롤 확장", id:"A-18", s:20, e:23, st:"todo"},
+  {track:"ACS", name:"ETA 학습 기능 (실 운영 데이터 기반 보정)", id:"A-19", s:20, e:23, st:"todo"},
+  {track:"ACS", name:"로봇 수동제어 / 위치설정 (ACS 로직)", id:"A-20", s:20, e:23, st:"todo"},
+  {track:"ACS", name:"물류로봇 자동충전 / 배터리 감지", id:"A-21", s:20, e:23, st:"todo"},
+  {track:"ACS", name:"통신 파라미터/프로토콜 관리", id:"A-22", s:20, e:23, st:"todo"},
+  {track:"ACS", name:"50대 대규모 부하 테스트 (시뮬레이션)", id:"A-23", s:24, e:27, st:"todo"},
+  {track:"ACS", name:"50대 동시 경로 계획/트래픽 최적화", id:"A-24", s:24, e:27, st:"todo"},
+  {track:"ACS", name:"ACS Server 자동 실행/모니터링 (50대 안정성)", id:"A-25", s:25, e:27, st:"todo"},
+  {track:"ACS", name:"Alarm 서비스 개발 (Alarm Code 관리/발생/이력)", id:"A-26", s:24, e:27, st:"todo"},
+  {track:"ACS", name:"Playback 데이터 저장/수집 (ACS 로그·궤적)", id:"A-27", s:24, e:27, st:"todo"},
+
+  // ===== UI·UX 트랙 =====
+  {track:"UI", name:"노드/맵 구성 요소 편집 (기본)", id:"U-01", s:4, e:11, st:"progress"},
+  {track:"UI", name:"노드/엣지/Zone 특성 관리", id:"U-02", s:7, e:15, st:"todo"},
+  {track:"UI", name:"로봇 객체 추가/그룹 관리 UI", id:"U-03", s:7, e:11, st:"progress"},
+  {track:"UI", name:"PLC 객체 DB 생성 및 관리 UI", id:"U-04", s:10, e:15, st:"todo"},
+  {track:"UI", name:"PLC TAG 수정/그룹핑/리스트/실시간 필터링 UI", id:"U-05", s:12, e:17, st:"todo"},
+  {track:"UI", name:"로봇 상태 실시간 대시보드", id:"U-06", s:12, e:17, st:"todo"},
+  {track:"UI", name:"미션 관리 UI (생성/할당/모니터링)", id:"U-07", s:14, e:19, st:"todo"},
+  {track:"UI", name:"로봇 수동제어 / 수동미션 / 위치설정 UI", id:"U-08", s:18, e:23, st:"todo"},
+  {track:"UI", name:"ETA 미션 진척률 표시 UI", id:"U-09", s:18, e:23, st:"todo"},
+  {track:"UI", name:"의미지도(Semantic Map) 관리", id:"U-10", s:14, e:19, st:"todo"},
+  {track:"UI", name:"PLC 모니터링 UI", id:"U-11", s:16, e:21, st:"todo"},
+  {track:"UI", name:"Object 편집 (Snap/정렬/그룹화)", id:"U-12", s:18, e:23, st:"todo"},
+  {track:"UI", name:"레이아웃 관리", id:"U-13", s:20, e:25, st:"todo"},
+  {track:"UI", name:"레이아웃 CAD/이미지 불러오기", id:"U-14", s:20, e:25, st:"todo"},
+  {track:"UI", name:"다층 관제 모니터링 (50대 대응)", id:"U-15", s:22, e:27, st:"todo"},
+  {track:"UI", name:"Object Lock / Force Unlock", id:"U-16", s:20, e:23, st:"todo"},
+  {track:"UI", name:"장애물 감지범위 설정/가시화", id:"U-17", s:20, e:23, st:"todo"},
+  {track:"UI", name:"Playback UI (재생/타임라인)", id:"U-18", s:24, e:27, st:"todo"},
+  {track:"UI", name:"차트/통계/DB 백업", id:"U-19", s:24, e:29, st:"todo"},
+  {track:"UI", name:"로그 작성/조회/내보내기", id:"U-20", s:22, e:27, st:"todo"},
+  {track:"UI", name:"Alarm Code 관리 및 알람 모니터링 UI", id:"U-21", s:24, e:27, st:"todo"},
+
+  // ===== H-PLC 트랙 =====
+  {track:"PLC", name:"H-PLC 아키텍처 설계", id:"P-07", s:7, e:11, st:"progress"},
+  {track:"PLC", name:"가상 PLC 테스트 환경 구축 (OPC UA Simulator)", id:"L-01", s:7, e:11, st:"todo"},
+  {track:"PLC", name:"OPC UA Client 기본 구현 (단일 세션 연결)", id:"L-02", s:9, e:13, st:"todo"},
+  {track:"PLC", name:"PLC 객체 등록/수정/삭제 API 개발", id:"L-03", s:10, e:14, st:"todo"},
+  {track:"PLC", name:"Polling 방식 TAG 수집 구현 및 검증", id:"L-04", s:11, e:15, st:"todo"},
+  {track:"PLC", name:"Pub/Sub(이벤트) 방식 TAG 수집 구현 및 검증", id:"L-05", s:11, e:15, st:"todo"},
+  {track:"PLC", name:"TAG 그룹핑 / 신호 조합 로직 구현", id:"L-06", s:14, e:17, st:"todo"},
+  {track:"PLC", name:"TAG 실시간 필터링 및 리스트 API 개발", id:"L-07", s:14, e:17, st:"todo"},
+  {track:"PLC", name:"Polling vs Pub/Sub 신뢰성·성능 비교 검증", id:"L-08", s:16, e:19, st:"todo"},
+  {track:"PLC", name:"PLC 인터락 조건 관리 (그룹/조건식)", id:"L-09", s:15, e:19, st:"todo"},
+  {track:"PLC", name:"PLC 이벤트 → ACS 연동 (Pallet 입고/출고 트리거)", id:"L-10", s:15, e:19, st:"todo"},
+  {track:"PLC", name:"다중 세션 관리 (150 PLC 동시 접속)", id:"L-11", s:16, e:21, st:"todo"},
+  {track:"PLC", name:"1,500 TAG 분산 Reading (300~500ms 주기)", id:"L-12", s:18, e:23, st:"todo"},
+  {track:"PLC", name:"사용자 주기 설정 기능 (Polling 간격 커스텀)", id:"L-13", s:20, e:23, st:"todo"},
+  {track:"PLC", name:"PLC 장애 감지 및 자동 재접속 (Failover)", id:"L-14", s:20, e:23, st:"todo"},
+  {track:"PLC", name:"PLC Write 기능 (ACS→PLC 제어 신호 전송)", id:"L-15", s:20, e:25, st:"todo"},
+  {track:"PLC", name:"H-PLC 다중 인스턴스 운영 (2~3개, 부하 분산)", id:"L-16", s:22, e:27, st:"todo"},
+  {track:"PLC", name:"PLC 모니터링 UI 연동 (실시간 데이터 스트리밍)", id:"L-17", s:22, e:27, st:"todo"},
+  {track:"PLC", name:"H-ACS + H-PLC 단일 서버 통합 운영 검증", id:"L-18", s:26, e:29, st:"todo"},
+
+  // ===== 통합·검증 트랙 =====
+  {track:"통합", name:"ACS ↔ UI 연계 테스트", id:"T-01", s:28, e:31, st:"todo"},
+  {track:"통합", name:"ACS ↔ H-PLC 연계 테스트", id:"T-02", s:28, e:31, st:"todo"},
+  {track:"통합", name:"VDA5050 실 로봇 연계 테스트", id:"T-03", s:28, e:33, st:"todo"},
+  {track:"통합", name:"시스템 통합 연계 E2E Test (전체)", id:"T-04", s:30, e:35, st:"todo"},
+  {track:"통합", name:"화성 공장 현장 적용 (OLT)", id:"T-05", s:34, e:39, st:"todo"},
+  {track:"통합", name:"울산 공장 현장 적용 (OLT)", id:"T-06", s:34, e:39, st:"todo"},
+];
+
+// ============================================
+// 주차 → 날짜 변환 유틸
+// ============================================
+function weekToLabel(w) {
+  const m = Math.floor(w / 4);
+  const wInM = (w % 4) + 1;
+  return `${months[m] || (m+1)+"월"} ${wInM}주`;
+}
+
+// ============================================
+// 계산 함수들
+// ============================================
+function calcStats(taskList) {
+  const done = taskList.filter(t => t.st === "done").length;
+  const progress = taskList.filter(t => t.st === "progress").length;
+  const todo = taskList.filter(t => t.st === "todo").length;
+  const total = taskList.length;
+  return { done, progress, todo, total, pct: total ? Math.round(done / total * 100) : 0 };
+}
+
+// 계획 기대치: 현재 주차 기준으로 종료일이 지난 항목 비율
+function calcExpected(taskList, week) {
+  const shouldBeDone = taskList.filter(t => t.e <= week).length;
+  return taskList.length ? Math.round(shouldBeDone / taskList.length * 100) : 0;
+}
+
+// 지연 위험도 판단
+function getRisk(task, week) {
+  if (task.st === "done") return { level: "ok", text: "완료" };
+  if (task.e < week) return { level: "high", text: "지연" };
+  if (task.e <= week + 1 && task.st === "todo") return { level: "high", text: "미착수 (종료 임박)" };
+  if (task.s <= week && task.st === "todo") return { level: "mid", text: "미착수" };
+  const remaining = task.e - week;
+  const duration = task.e - task.s;
+  if (task.st === "progress" && remaining <= 1 && duration > 2) return { level: "mid", text: "잔여 1주" };
+  return null;
+}
+
+// ============================================
+// 스냅샷 저장/불러오기
+// ============================================
+const SNAP_KEY = "hacs_progress_snapshots";
+
+function getSnapshots() {
+  try { return JSON.parse(localStorage.getItem(SNAP_KEY) || "[]"); } catch { return []; }
+}
+
+function saveSnapshots(snaps) {
+  localStorage.setItem(SNAP_KEY, JSON.stringify(snaps));
+}
+
+function takeSnapshot() {
+  const snaps = getSnapshots();
+  const stats = calcStats(tasks);
+  const now = new Date();
+  const snap = {
+    week: todayWeek,
+    weekLabel: weekToLabel(todayWeek),
+    date: now.toISOString().split("T")[0],
+    done: stats.done,
+    progress: stats.progress,
+    todo: stats.todo,
+    total: stats.total,
+    pct: stats.pct,
+    expected: calcExpected(tasks, todayWeek),
+    tracks: {}
+  };
+  for (const track of Object.keys(TRACK_COLORS)) {
+    const tt = tasks.filter(t => t.track === track);
+    snap.tracks[track] = calcStats(tt);
+  }
+  // 동일 주차 중복 방지 (덮어쓰기)
+  const idx = snaps.findIndex(s => s.week === todayWeek);
+  if (idx >= 0) snaps[idx] = snap; else snaps.push(snap);
+  snaps.sort((a, b) => a.week - b.week);
+  saveSnapshots(snaps);
+  render();
+  alert(`W${todayWeek} (${snap.weekLabel}) 스냅샷이 저장되었습니다.`);
+}
+
+function clearSnapshots() {
+  if (confirm("모든 스냅샷 기록을 삭제하시겠습니까?")) {
+    localStorage.removeItem(SNAP_KEY);
+    render();
+  }
+}
+
+// ============================================
+// 렌더링
+// ============================================
+function render() {
+  renderKPI();
+  renderTrackBars();
+  renderRiskTable();
+  renderSnapHistory();
+  renderTrendChart();
+  document.getElementById("syncInfo").textContent = `마지막 동기화: ${new Date().toLocaleString("ko-KR")} · todayWeek = W${todayWeek}`;
+  document.getElementById("currentWeekLabel").textContent = `W${todayWeek} (${weekToLabel(todayWeek)})`;
+}
+
+function renderKPI() {
+  const stats = calcStats(tasks);
+  const expected = calcExpected(tasks, todayWeek);
+  const gap = stats.pct - expected;
+  const riskItems = tasks.filter(t => { const r = getRisk(t, todayWeek); return r && (r.level === "high" || r.level === "mid"); });
+
+  const kpis = [
+    { label: "전체 업무", value: stats.total, sub: `기획${tasks.filter(t=>t.track==="기획").length} · ACS${tasks.filter(t=>t.track==="ACS").length} · UI${tasks.filter(t=>t.track==="UI").length} · PLC${tasks.filter(t=>t.track==="PLC").length} · 통합${tasks.filter(t=>t.track==="통합").length}`, color: "#2B3990", fill: 100 },
+    { label: "완료율", value: stats.pct + "%", sub: `${stats.done}건 완료 / ${stats.progress}건 진행중 / ${stats.todo}건 대기`, color: "#2e7d32", fill: stats.pct },
+    { label: "계획 기대치", value: expected + "%", sub: `W${todayWeek} 기준 종료 예정 ${tasks.filter(t=>t.e<=todayWeek).length}건`, color: "#3D4FA6", fill: expected },
+    { label: "계획 대비 갭", value: (gap >= 0 ? "+" : "") + gap + "%p", sub: gap >= 0 ? "정상 진행" : "지연 주의", color: gap >= 0 ? "#2e7d32" : "#c62828", fill: Math.max(0, 50 + gap) },
+    { label: "위험 항목", value: riskItems.length + "건", sub: `High ${riskItems.filter(r=>{const x=getRisk(r,todayWeek);return x&&x.level==="high"}).length} · Mid ${riskItems.filter(r=>{const x=getRisk(r,todayWeek);return x&&x.level==="mid"}).length}`, color: riskItems.length > 0 ? "#e65100" : "#2e7d32", fill: Math.max(0, 100 - riskItems.length * 10) }
+  ];
+
+  const row = document.getElementById("kpiRow");
+  row.innerHTML = kpis.map(k => `
+    <div class="kpi">
+      <div class="label">${k.label}</div>
+      <div class="value" style="color:${k.color}">${k.value}</div>
+      <div class="sub">${k.sub}</div>
+      <div class="bar"><div class="fill" style="width:${k.fill}%; background:${k.color}"></div></div>
+    </div>
+  `).join("");
+}
+
+function renderTrackBars() {
+  const box = document.getElementById("trackBars");
+  let html = "";
+  for (const [track, color] of Object.entries(TRACK_COLORS)) {
+    const tt = tasks.filter(t => t.track === track);
+    const stats = calcStats(tt);
+    const expected = calcExpected(tt, todayWeek);
+    const donePct = tt.length ? (stats.done / tt.length * 100) : 0;
+    const progPct = tt.length ? (stats.progress / tt.length * 100) : 0;
+    html += `
+      <div class="track-row">
+        <div class="track-label" style="color:${color}">${track}</div>
+        <div class="track-bar">
+          <div class="track-fill-expected" style="width:${expected}%"></div>
+          <div class="track-fill-done" style="width:${donePct}%; background:${color}"></div>
+          <div class="track-fill-progress" style="left:${donePct}%; width:${progPct}%; background:${color}; opacity:0.4"></div>
+        </div>
+        <div class="track-pct" style="color:${color}">${stats.done}/${tt.length} (${Math.round(donePct)}%)</div>
+      </div>
+    `;
+  }
+  // 전체
+  const all = calcStats(tasks);
+  const allExp = calcExpected(tasks, todayWeek);
+  const allDonePct = all.total ? (all.done / all.total * 100) : 0;
+  const allProgPct = all.total ? (all.progress / all.total * 100) : 0;
+  html += `
+    <div class="track-row" style="border-top:2px solid #2B3990; margin-top:8px; padding-top:12px;">
+      <div class="track-label" style="color:#2B3990; font-size:13px;">전체</div>
+      <div class="track-bar" style="height:24px">
+        <div class="track-fill-expected" style="width:${allExp}%; height:100%"></div>
+        <div class="track-fill-done" style="width:${allDonePct}%; background:#2B3990; height:100%"></div>
+        <div class="track-fill-progress" style="left:${allDonePct}%; width:${allProgPct}%; background:#2B3990; opacity:0.4; height:100%"></div>
+      </div>
+      <div class="track-pct" style="color:#2B3990; font-size:13px;">${all.done}/${all.total} (${Math.round(allDonePct)}%)</div>
+    </div>
+  `;
+  box.innerHTML = html;
+}
+
+function renderRiskTable() {
+  const tbody = document.querySelector("#riskTable tbody");
+  const risks = [];
+  tasks.forEach(t => {
+    const r = getRisk(t, todayWeek);
+    if (r) risks.push({ ...t, risk: r });
+  });
+  risks.sort((a, b) => {
+    const order = { high: 0, mid: 1, low: 2, ok: 3 };
+    return (order[a.risk.level] || 9) - (order[b.risk.level] || 9);
+  });
+
+  if (risks.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#2e7d32; padding:20px;">✅ 현재 지연 위험 항목 없음</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = risks.map(r => {
+    const cls = r.risk.level === "high" ? "risk-high" : r.risk.level === "mid" ? "risk-mid" : r.risk.level === "low" ? "risk-low" : "risk-ok";
+    const endLabel = weekToLabel(r.e);
+    const diff = r.e - todayWeek;
+    const note = diff < 0 ? `${-diff}주 초과` : diff === 0 ? "이번 주 종료" : `잔여 ${diff}주`;
+    return `<tr>
+      <td><strong>${r.id}</strong></td>
+      <td>${r.name}</td>
+      <td style="color:${TRACK_COLORS[r.track]}">${r.track}</td>
+      <td>W${r.e} (${endLabel})</td>
+      <td><span class="risk-badge ${r.st==='done'?'risk-ok':r.st==='progress'?'risk-low':'risk-mid'}">${r.st}</span></td>
+      <td><span class="risk-badge ${cls}">${r.risk.text}</span></td>
+      <td style="font-size:11px; color:#666">${note}</td>
+    </tr>`;
+  }).join("");
+}
+
+function renderSnapHistory() {
+  const snaps = getSnapshots();
+  const tbody = document.querySelector("#snapTable tbody");
+  if (snaps.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="color:#888; padding:16px;">아직 저장된 스냅샷이 없습니다. "📸 이번 주 스냅샷 저장" 버튼을 눌러주세요.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = snaps.map((s, i) => {
+    const prev = i > 0 ? snaps[i - 1] : null;
+    const delta = prev ? s.pct - prev.pct : 0;
+    const deltaStr = prev ? (delta > 0 ? `<span class="delta-up">+${delta}%p ▲</span>` : delta < 0 ? `<span class="delta-down">${delta}%p ▼</span>` : `<span style="color:#888">0</span>`) : "—";
+    return `<tr>
+      <td><strong>W${s.week}</strong></td>
+      <td>${s.date}</td>
+      <td style="color:#2e7d32; font-weight:600">${s.done}</td>
+      <td style="color:#3D4FA6">${s.progress}</td>
+      <td style="color:#9e9e9e">${s.todo}</td>
+      <td><strong>${s.pct}%</strong> <span style="font-size:10px; color:#888">(기대 ${s.expected}%)</span></td>
+      <td>${deltaStr}</td>
+    </tr>`;
+  }).join("");
+}
+
+// ============================================
+// 트렌드 차트 (Canvas 직접 그리기)
+// ============================================
+function renderTrendChart() {
+  const canvas = document.getElementById("trendChart");
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 280 * dpr;
+  canvas.style.height = "280px";
+  ctx.scale(dpr, dpr);
+  const W = rect.width, H = 280;
+  ctx.clearRect(0, 0, W, H);
+
+  const pad = { t: 30, b: 40, l: 50, r: 30 };
+  const cw = W - pad.l - pad.r;
+  const ch = H - pad.t - pad.b;
+
+  // 계획 기대 곡선 (주차 0~39)
+  const planPts = [];
+  for (let w = 0; w <= totalWeeks; w++) {
+    const exp = calcExpected(tasks, w);
+    planPts.push({ w, v: exp });
+  }
+
+  // 실제 스냅샷
+  const snaps = getSnapshots();
+  // 현재도 하나 포함
+  const current = { week: todayWeek, pct: calcStats(tasks).pct };
+
+  // X축: 주차 0~39
+  const xScale = (w) => pad.l + (w / totalWeeks) * cw;
+  const yScale = (v) => pad.t + ch - (v / 100) * ch;
+
+  // 배경 그리드
+  ctx.strokeStyle = "#eee";
+  ctx.lineWidth = 1;
+  for (let p = 0; p <= 100; p += 25) {
+    const y = yScale(p);
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+    ctx.fillStyle = "#999"; ctx.font = "10px sans-serif"; ctx.textAlign = "right";
+    ctx.fillText(p + "%", pad.l - 8, y + 4);
+  }
+
+  // 월 경계선
+  ctx.strokeStyle = "#ddd"; ctx.lineWidth = 1;
+  for (let m = 0; m < 10; m++) {
+    const x = xScale(m * 4);
+    ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, H - pad.b); ctx.stroke();
+    ctx.fillStyle = "#888"; ctx.font = "10px sans-serif"; ctx.textAlign = "center";
+    ctx.fillText(months[m], x + (cw / totalWeeks) * 2, H - pad.b + 16);
+  }
+
+  // 오늘 라인
+  ctx.strokeStyle = "#ff5722"; ctx.lineWidth = 2; ctx.setLineDash([4, 3]);
+  const todayX = xScale(todayWeek);
+  ctx.beginPath(); ctx.moveTo(todayX, pad.t); ctx.lineTo(todayX, H - pad.b); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = "#ff5722"; ctx.font = "bold 10px sans-serif"; ctx.textAlign = "center";
+  ctx.fillText("오늘 W" + todayWeek, todayX, pad.t - 8);
+
+  // 계획 곡선
+  ctx.strokeStyle = "#8B9AD8"; ctx.lineWidth = 2; ctx.setLineDash([6, 3]);
+  ctx.beginPath();
+  planPts.forEach((p, i) => {
+    const x = xScale(p.w), y = yScale(p.v);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 실제 곡선
+  if (snaps.length > 0) {
+    ctx.strokeStyle = "#3D4FA6"; ctx.lineWidth = 3;
+    ctx.beginPath();
+    snaps.forEach((s, i) => {
+      const x = xScale(s.week), y = yScale(s.pct);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // 점 표시
+    snaps.forEach(s => {
+      const x = xScale(s.week), y = yScale(s.pct);
+      ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = "#3D4FA6"; ctx.fill();
+      ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = "#3D4FA6"; ctx.font = "bold 10px sans-serif"; ctx.textAlign = "center";
+      ctx.fillText(s.pct + "%", x, y - 10);
+    });
+  }
+
+  // 현재 점 (스냅샷 없어도)
+  const cx = xScale(current.week), cy = yScale(current.pct);
+  ctx.beginPath(); ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+  ctx.fillStyle = "#ff9800"; ctx.fill();
+  ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = "#e65100"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "left";
+  ctx.fillText(`현재 ${current.pct}%`, cx + 10, cy + 4);
+
+  // 범례
+  ctx.font = "11px sans-serif";
+  const lx = pad.l + 10, ly = pad.t + 14;
+  ctx.setLineDash([6, 3]); ctx.strokeStyle = "#8B9AD8"; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 30, ly); ctx.stroke();
+  ctx.setLineDash([]); ctx.fillStyle = "#666"; ctx.textAlign = "left";
+  ctx.fillText("계획 기대치", lx + 35, ly + 4);
+
+  ctx.strokeStyle = "#3D4FA6"; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(lx + 130, ly); ctx.lineTo(lx + 160, ly); ctx.stroke();
+  ctx.fillText("실제 진척률", lx + 165, ly + 4);
+}
+
+// ============================================
+// 주간보고 텍스트 생성
+// ============================================
+function exportReportText() {
+  const stats = calcStats(tasks);
+  const expected = calcExpected(tasks, todayWeek);
+  const gap = stats.pct - expected;
+
+  let text = `══════════════════════════════════════\n`;
+  text += `  H-ACS 2.0 마일스톤 현황 (W${todayWeek} · ${weekToLabel(todayWeek)})\n`;
+  text += `══════════════════════════════════════\n\n`;
+
+  text += `■ 전체 진척률\n`;
+  text += `  완료 ${stats.done}건 / 진행중 ${stats.progress}건 / 대기 ${stats.todo}건 (총 ${stats.total}건)\n`;
+  text += `  완료율: ${stats.pct}% (계획 기대치: ${expected}%, 갭: ${gap >= 0 ? "+" : ""}${gap}%p)\n\n`;
+
+  text += `■ 트랙별 현황\n`;
+  for (const track of Object.keys(TRACK_COLORS)) {
+    const tt = tasks.filter(t => t.track === track);
+    const s = calcStats(tt);
+    const exp = calcExpected(tt, todayWeek);
+    text += `  ${track}: ${s.done}/${tt.length} 완료 (${s.pct}%) · 진행중 ${s.progress} · 기대치 ${exp}%\n`;
+  }
+
+  text += `\n■ 이번 주 완료 항목\n`;
+  const doneItems = tasks.filter(t => t.st === "done");
+  if (doneItems.length > 0) {
+    doneItems.forEach(t => { text += `  ✅ ${t.id} ${t.name}\n`; });
+  } else {
+    text += `  (완료 항목 없음)\n`;
+  }
+
+  text += `\n■ 현재 진행중 항목\n`;
+  const progItems = tasks.filter(t => t.st === "progress");
+  progItems.forEach(t => {
+    const remain = t.e - todayWeek;
+    text += `  🔵 ${t.id} ${t.name} (잔여 ${remain > 0 ? remain + "주" : "종료 임박"})\n`;
+  });
+
+  text += `\n■ 지연 위험 항목\n`;
+  const riskItems = tasks.filter(t => { const r = getRisk(t, todayWeek); return r && (r.level === "high" || r.level === "mid"); });
+  if (riskItems.length > 0) {
+    riskItems.forEach(t => {
+      const r = getRisk(t, todayWeek);
+      text += `  ⚠️ ${t.id} ${t.name} — ${r.text}\n`;
+    });
+  } else {
+    text += `  (위험 항목 없음)\n`;
+  }
+
+  text += `\n■ 다음 주 예정 (W${todayWeek + 1})\n`;
+  const nextWeekStart = tasks.filter(t => t.s === todayWeek + 1 && t.st === "todo");
+  if (nextWeekStart.length > 0) {
+    nextWeekStart.forEach(t => { text += `  📌 ${t.id} ${t.name} (착수 예정)\n`; });
+  } else {
+    text += `  (신규 착수 예정 없음)\n`;
+  }
+
+  document.getElementById("reportSection").style.display = "block";
+  document.getElementById("reportPreview").textContent = text;
+  document.getElementById("reportSection").scrollIntoView({ behavior: "smooth" });
+}
+
+function copyReport() {
+  const text = document.getElementById("reportPreview").textContent;
+  navigator.clipboard.writeText(text).then(() => alert("클립보드에 복사되었습니다."));
+}
+
+// ============================================
+// 초기화
+// ============================================
+// ===== 마일스톤 JSON 동기화 =====
+function syncFromJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.tasks || !Array.isArray(data.tasks)) {
+        alert("올바른 마일스톤 JSON 파일이 아닙니다.");
+        return;
+      }
+      let updated = 0;
+      data.tasks.forEach(imported => {
+        const idx = tasks.findIndex(t => t.id === imported.id);
+        if (idx >= 0) {
+          tasks[idx].s = imported.s;
+          tasks[idx].e = imported.e;
+          tasks[idx].st = imported.st;
+          tasks[idx].name = imported.name;
+          if (imported.track) tasks[idx].track = imported.track;
+          updated++;
+        }
+      });
+      render();
+      const msg = `✅ 동기화 완료: ${updated}건 업데이트 (${data.exportDate || file.name})`;
+      document.getElementById("syncStatus").textContent = msg;
+      setTimeout(() => { document.getElementById("syncStatus").textContent = ""; }, 5000);
+    } catch (err) {
+      alert("JSON 파일 파싱 오류: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = "";
+}
+
+window.addEventListener("load", render);
+window.addEventListener("resize", () => renderTrendChart());
+</script>
+</body>
+</html>
