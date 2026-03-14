@@ -26,6 +26,61 @@ const _delayed = _all.filter(t => t.e < DATA_WEEK && t.st !== "done");
 // 다음 주 착수 예정: 시작주가 이번~다음 주인 todo
 const _upcoming = _all.filter(t => t.s >= DATA_WEEK && t.s <= DATA_WEEK + 1 && t.st === "todo");
 
+// ── 커밋 → task ID 매핑 헬퍼 ─────────────────────────────────
+/**
+ * 커밋 메시지 배열을 task ID 기준으로 분류
+ * 1순위: 커밋 메시지에 ID 패턴 (A-01, P-05 등) 직접 언급
+ * 2순위: task 이름 키워드 포함 여부
+ * 미매핑: "기타"
+ */
+function groupByTaskId(commits, taskList) {
+  const grouped = {};
+  commits.forEach(msg => {
+    // 1) ID 직접 언급
+    const idMatch = msg.match(/\b([APLUT]-\d+[a-z]?)\b/i);
+    if (idMatch) {
+      const id = idMatch[1].toUpperCase();
+      const task = taskList.find(t => t.id && t.id.toUpperCase() === id);
+      if (task) {
+        if (!grouped[id]) grouped[id] = { name: task.name, commits: [] };
+        grouped[id].commits.push(msg);
+        return;
+      }
+    }
+    // 2) task 이름 키워드 매칭
+    let hit = null;
+    for (const task of taskList) {
+      if (!task.name) continue;
+      const kws = task.name.split(/[\s\/\(\)\+·,\-]+/).filter(k => k.length >= 4);
+      if (kws.some(kw => msg.toLowerCase().includes(kw.toLowerCase()))) { hit = task; break; }
+    }
+    if (hit) {
+      const id = hit.id;
+      if (!grouped[id]) grouped[id] = { name: hit.name, commits: [] };
+      grouped[id].commits.push(msg);
+    } else {
+      if (!grouped["기타"]) grouped["기타"] = { name: "기타", commits: [] };
+      grouped["기타"].commits.push(msg);
+    }
+  });
+  return grouped;
+}
+
+/** groupByTaskId 결과를 PptxGenJS bullet 배열로 변환 */
+function commitsToBullets(grouped, fs=9) {
+  const out = [];
+  Object.entries(grouped).forEach(([id, info]) => {
+    if (id === "기타") return;
+    out.push({ text:`[${id}] ${info.name}`, options:{bold:true,breakLine:true,fontSize:fs+0.5,color:NB} });
+    info.commits.forEach(c => out.push({ text:`  ${c}`, options:{bullet:true,breakLine:true,fontSize:fs,color:NDARK} }));
+  });
+  if (grouped["기타"]?.commits?.length) {
+    out.push({ text:"기타", options:{bold:true,breakLine:true,fontSize:fs,color:NDGR} });
+    grouped["기타"].commits.forEach(c => out.push({ text:`  ${c}`, options:{bullet:true,breakLine:true,fontSize:fs-0.5,color:NDGR} }));
+  }
+  return out;
+}
+
 const OUTPUT_PM = "/home/sally/claude_cowork/HACS2.0_주간보고_11주차.pptx"; // v4 — 기획 행 공란
 const TODAY = "2026.03.14";
 const PERIOD = "2026년 3월 2주차 (3/9~3/13)";
@@ -235,19 +290,27 @@ s4.addShape(pres.shapes.RECTANGLE,{x:0.5,y:0.95,w:4.0,h:2.45,fill:{color:NW},sha
 s4.addShape(pres.shapes.RECTANGLE,{x:0.5,y:0.95,w:4.0,h:0.06,fill:{color:NGN}});
 s4.addText("권익현 (ben-navifra)",{x:0.7,y:1.08,w:3.0,h:0.3,fontSize:12,fontFace:"Calibri",color:NN,bold:true,margin:0});
 s4.addText("10커밋",{x:3.75,y:1.08,w:0.65,h:0.3,fontSize:10,fontFace:"Calibri",color:NGN,bold:true,align:"right",margin:0});
-s4.addText([
-  {text:"[feat] map service 추가",options:{bullet:true,breakLine:true,fontSize:9,color:NDARK}},
-  {text:"[fix] device/area 업데이트 시 node device index 갱신",options:{bullet:true,breakLine:true,fontSize:9,color:NDARK}},
-  {text:"[fix] data store key 템플릿 변경 / config adapter 추가",options:{bullet:true,breakLine:true,fontSize:9,color:NDARK}},
-  {text:"[fix] MQTT subscribe callback, HTTP token 추가",options:{bullet:true,breakLine:true,fontSize:9,color:NDARK}},
-  {text:"[fix] geometry math util, 역직렬화 주석, 테스트 코드",options:{bullet:true,breakLine:true,fontSize:9,color:NDARK}},
-  {text:"[docs] map service README 추가",options:{bullet:true,fontSize:9,color:NDARK}},
-],{x:0.7,y:1.45,w:3.65,h:1.9,fontFace:"Calibri",paraSpaceAfter:2,margin:0});
+// ── 커밋 목록 정의 (매주 이 부분만 수정) ──────────────────
+const ikHyunCommits = [
+  "[feat] map service 추가 (A-01)",
+  "[fix] device/area 업데이트 시 node device index 갱신",
+  "[fix] data store key 템플릿 변경 / config adapter 추가 (A-02)",
+  "[fix] MQTT subscribe callback, HTTP token 추가 (A-02)",
+  "[fix] geometry math util, 역직렬화 주석, 테스트 코드",
+  "[docs] map service README 추가",
+];
+s4.addText(commitsToBullets(groupByTaskId(ikHyunCommits, _all.filter(t=>t.track==="ACS"||t.track==="기획"))),
+  {x:0.7,y:1.45,w:3.65,h:1.9,fontFace:"Calibri",paraSpaceAfter:2,margin:0});
 
 s4.addShape(pres.shapes.RECTANGLE,{x:0.5,y:3.55,w:4.0,h:0.85,fill:{color:NW},shadow:shade()});
 s4.addShape(pres.shapes.RECTANGLE,{x:0.5,y:3.55,w:4.0,h:0.06,fill:{color:NTEAL}});
 s4.addText("최명서 (Navifra-Chris) — 2커밋",{x:0.7,y:3.68,w:3.7,h:0.28,fontSize:11,fontFace:"Calibri",color:NN,bold:true,margin:0});
-s4.addText("[chore] output/tmp 무시 규칙  ·  [fix] Linux configure 캐시 fresh 초기화",{x:0.7,y:4.0,w:3.7,h:0.28,fontSize:9,fontFace:"Calibri",color:NDARK,margin:0});
+const chrisCommits = [
+  "[chore] output/tmp 무시 규칙",
+  "[fix] Linux configure 캐시 fresh 초기화",
+];
+s4.addText(commitsToBullets(groupByTaskId(chrisCommits, _all.filter(t=>t.track==="ACS"))),
+  {x:0.7,y:4.0,w:3.7,h:0.35,fontFace:"Calibri",paraSpaceAfter:2,margin:0});
 
 // SDD 6계층
 s4.addShape(pres.shapes.RECTANGLE,{x:4.7,y:0.95,w:4.8,h:3.85,fill:{color:NW},shadow:shade()});
@@ -288,21 +351,28 @@ s5.addShape(pres.shapes.RECTANGLE,{x:0.5,y:0.95,w:5.8,h:3.5,fill:{color:NW},shad
 s5.addShape(pres.shapes.RECTANGLE,{x:0.5,y:0.95,w:5.8,h:0.06,fill:{color:NB}});
 s5.addText("숀 (navifra-sean)",{x:0.7,y:1.08,w:4.5,h:0.3,fontSize:12,fontFace:"Calibri",color:NN,bold:true,margin:0});
 s5.addText("21커밋 (FE+BE)",{x:5.2,y:1.08,w:1.0,h:0.3,fontSize:9,fontFace:"Calibri",color:NB,bold:true,align:"right",margin:0});
-s5.addText([
-  {text:"[feat] Audit Log (Frontend+Backend) #707/#606 ← audit_logs 테이블 연동",options:{bullet:true,breakLine:true,fontSize:9.5,color:NDARK}},
-  {text:"[feat] API Swagger Frontend/Backend 테스트 #657 / jsDoc 변환 #652",options:{bullet:true,breakLine:true,fontSize:9.5,color:NDARK}},
-  {text:"[feat] Job.message 추가 #816/#655 / ACS Job 기록 최적화 #660",options:{bullet:true,breakLine:true,fontSize:9.5,color:NDARK}},
-  {text:"[fix]  맵 리스트 Text Truncate #813 / AppBar CSS 버그 #809",options:{bullet:true,breakLine:true,fontSize:9.5,color:NDARK}},
-  {text:"[feat] 다크 테마 배경 수정 #812 / Favorite star→heart #811",options:{bullet:true,breakLine:true,fontSize:9.5,color:NDARK}},
-  {text:"[feat] Package Upgrade #810/#650 / 404 다국어 처리 #806",options:{bullet:true,breakLine:true,fontSize:9.5,color:NDARK}},
-  {text:"[refac] Model allowNull: true 제거 #656",options:{bullet:true,fontSize:9.5,color:NDARK}},
-],{x:0.7,y:1.45,w:5.4,h:2.9,fontFace:"Calibri",paraSpaceAfter:3,margin:0});
+// ── 커밋 목록 정의 (매주 이 부분만 수정) ──────────────────
+const seanCommits = [
+  "[feat] Audit Log (Frontend+Backend) #707/#606 ← audit_logs 테이블 연동",
+  "[feat] API Swagger Frontend/Backend 테스트 #657 / jsDoc 변환 #652",
+  "[feat] Job.message 추가 #816/#655 / ACS Job 기록 최적화 #660",
+  "[fix]  맵 리스트 Text Truncate #813 / AppBar CSS 버그 #809",
+  "[feat] 다크 테마 배경 수정 #812 / Favorite star→heart #811",
+  "[feat] Package Upgrade #810/#650 / 404 다국어 처리 #806",
+  "[refac] Model allowNull: true 제거 #656",
+];
+s5.addText(commitsToBullets(groupByTaskId(seanCommits, _all.filter(t=>t.track==="UI"))),
+  {x:0.7,y:1.45,w:5.4,h:2.9,fontFace:"Calibri",paraSpaceAfter:3,margin:0});
 
 s5.addShape(pres.shapes.RECTANGLE,{x:6.7,y:0.95,w:2.8,h:1.0,fill:{color:NW},shadow:shade()});
 s5.addShape(pres.shapes.RECTANGLE,{x:6.7,y:0.95,w:2.8,h:0.06,fill:{color:NAMB}});
 s5.addText("종원선 (Navifra-Pedro)",{x:6.9,y:1.08,w:2.5,h:0.28,fontSize:11,fontFace:"Calibri",color:NN,bold:true,margin:0});
 s5.addText("1커밋",{x:9.1,y:1.08,w:0.3,h:0.28,fontSize:9,fontFace:"Calibri",color:NAMB,bold:true,align:"right",margin:0});
-s5.addText("[feat] brain desktop 프로그램 통합 #818",{x:6.9,y:1.42,w:2.5,h:0.45,fontSize:9,fontFace:"Calibri",color:NDARK,margin:0});
+const pedroCommits = [
+  "[feat] brain desktop 프로그램 통합 #818",
+];
+s5.addText(commitsToBullets(groupByTaskId(pedroCommits, _all.filter(t=>t.track==="UI"))),
+  {x:6.9,y:1.42,w:2.5,h:0.45,fontFace:"Calibri",paraSpaceAfter:2,margin:0});
 
 // DB 설계서 박스
 s5.addShape(pres.shapes.RECTANGLE,{x:6.7,y:2.1,w:2.8,h:2.35,fill:{color:NW},shadow:shade()});
