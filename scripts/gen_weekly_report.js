@@ -460,26 +460,21 @@ const projCards = [
     badge: "일정 변경",  badgeColor: "D97706",
     title: "2.1  Verification Toolkit  (구 시뮬레이션)",
     items: [
-      "OLT 일정 변경 — 세부 일정 재조정 필요",
       "PLC 시뮬레이션: 4월 산출물 추가 필요",
-      "명칭/방향: 시뮬레이션 → Verification Toolkit으로 재정의",
+      "명칭/방향: 시뮬레이션 → Verification Toolkit으로 정리",
+      "10월 울산 OLT 일정 변경",
     ],
   },
   {
     x:5.15, y:0.9, w:4.55, h:2.15,
-    accent: NB,          // blue
+    accent: NB,
     badge: "논의중",     badgeColor: NB,
     title: "1.1  울산 C 프로젝트",
-    items: [
-      "대시보드 신규 요구사항 — Grafana 차트 변경 검토",
-      "관제 UI 포함 여부 / 별도 UI 여부 확인 필요",
-      "ACS 모니터링 대체 검토 (더 추상화된 정보 제공 필요)",
-      '"내 공정에 몇 번 물건을 갖다 줬는가?" — 판단 기준 정의 필요',
-    ],
+    items: [],
   },
   {
     x:0.3, y:3.15, w:4.55, h:2.15,
-    accent: "0D9488",   // teal
+    accent: "0D9488",
     badge: "준비중",    badgeColor: "0D9488",
     title: "1.2  천안아산 프로젝트",
     items: [
@@ -490,13 +485,11 @@ const projCards = [
   },
   {
     x:5.15, y:3.15, w:4.55, h:2.15,
-    accent: "7C3AED",   // purple
+    accent: "7C3AED",
     badge: "8월 통합테스트",  badgeColor: "7C3AED",
     title: "1.3  EVO 화성 프로젝트",
     items: [
-      "엘리베이터 인터페이스 논의 진행",
-      "자동문 인터페이스 논의 진행",
-      "8월 통합 테스트 → 화성 현장에서 진행 예정",
+      "8월 통합 테스트 → 화성 공장에서 진행 예정",
       "9월 천안아산 적용 필수 (연계 일정)",
     ],
   },

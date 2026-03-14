@@ -342,21 +342,17 @@ const custProjCards = [
     badge: "일정 변경",  badgeColor: "D97706",
     title: "2.1  Verification Toolkit",
     items: [
-      "OLT 일정 변경 — 세부 일정 재조정 예정",
       "PLC 시뮬레이션: 4월 산출물 추가 예정",
-      "명칭/방향: 시뮬레이션 → Verification Toolkit",
+      "명칭/방향: 시뮬레이션 → Verification Toolkit으로 정리",
+      "10월 울산 OLT 일정 변경",
     ],
   },
   {
     x:5.1, y:0.92, w:4.6, h:2.1,
     accent: BLUE,
-    badge: "요구사항 확인중",  badgeColor: BLUE,
+    badge: "논의중",  badgeColor: BLUE,
     title: "1.1  울산 C 프로젝트",
-    items: [
-      "대시보드 신규 요구사항 — Grafana 차트 도입 검토",
-      "관제 UI 포함 여부 / 별도 UI 구성 여부 확인 중",
-      "ACS 모니터링 기반 추상화 대시보드 방향 검토",
-    ],
+    items: [],
   },
   {
     x:0.3, y:3.1, w:4.6, h:2.15,
@@ -375,9 +371,8 @@ const custProjCards = [
     badge: "8월 통합테스트",  badgeColor: PURPLE,
     title: "1.3  EVO 화성 프로젝트",
     items: [
-      "엘리베이터 / 자동문 인터페이스 논의 진행",
-      "8월 통합 테스트 → 화성 현장 진행 예정",
-      "9월 천안아산 프로젝트 적용 연계 일정",
+      "8월 통합 테스트 → 화성 공장에서 진행 예정",
+      "9월 천안아산 적용 필수 (연계 일정)",
     ],
   },
 ];
