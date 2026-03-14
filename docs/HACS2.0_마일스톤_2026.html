@@ -272,7 +272,9 @@
         <tr><td class="cp-week">7월 2주<br/>(W26)</td><td>20~50대</td><td class="cp-track">ACS / UI / PLC</td><td>50대 시뮬레이션 부하 테스트 1차 결과 · 다층 관제 모니터링 화면<br/>H-PLC 다중 인스턴스 운영 로그 · PLC 모니터링 UI</td></tr>
         <tr><td class="cp-week">7월 말<br/>(W27)</td><td><strong>🤖 50대</strong></td><td class="cp-track">ACS / UI / PLC</td><td><strong>[마일스톤] 50대 부하 테스트 완료 + 통합 관제 데모</strong><br/>50대 동시 경로/트래픽 최적화 영상 · ACS Server 안정성 확인 · H-ACS+H-PLC 단일 서버 통합 · Playback 기능</td></tr>
         <tr><td class="cp-week">8월<br/>(W28~31)</td><td><strong>실 로봇</strong></td><td class="cp-track">통합</td><td><strong>[마일스톤] 실 로봇 연계 + E2E 통합 테스트</strong><br/>ACS↔UI 연계 · ACS↔H-PLC 연계 · VDA5050 실 로봇 테스트 영상 · 차트/통계 대시보드</td></tr>
-        <tr><td class="cp-week">9~10월<br/>(W34~39)</td><td><strong>현장</strong></td><td class="cp-track">통합</td><td><strong>[마일스톤] 화성/울산 공장 OLT</strong><br/>현장 테스트 리포트 · 최종 검수 보고서</td></tr>
+        <tr><td class="cp-week">8월<br/>(W29~32)</td><td><strong>현장</strong></td><td class="cp-track">통합</td><td><strong>[마일스톤] 화성 공장 OLT</strong><br/>화성 현장 테스트 리포트</td></tr>
+        <tr><td class="cp-week">9월<br/>(W33~36)</td><td><strong>현장</strong></td><td class="cp-track">통합</td><td><strong>[마일스톤] 천안아산 현장 적용</strong><br/>천안아산 현장 배포 · 미들웨어 전체 적용 (NaviCore 포함)</td></tr>
+        <tr><td class="cp-week">10월<br/>(W37~40)</td><td><strong>현장</strong></td><td class="cp-track">통합</td><td><strong>[마일스톤] 울산 공장 OLT</strong><br/>울산 현장 테스트 리포트 · 최종 검수 보고서</td></tr>
       </tbody>
     </table>
   </div>
@@ -448,9 +450,14 @@ const tasks = [
   {track:"통합", name:"VDA5050 실 로봇 연계 테스트", id:"T-03", s:28, e:33, st:"todo", reqs:[]},
   {track:"통합", name:"시스템 통합 연계 E2E Test (전체)", id:"T-04", s:30, e:35, st:"todo", reqs:[]},
 
-  {track:"통합", cat:"9~10월 — 화성/울산 현장 OLT"},
-  {track:"통합", name:"화성 공장 현장 적용 (OLT)", id:"T-05", s:34, e:39, st:"todo", reqs:[]},
-  {track:"통합", name:"울산 공장 현장 적용 (OLT)", id:"T-06", s:34, e:39, st:"todo", reqs:[]},
+  {track:"통합", cat:"8월 — 화성 공장 현장 OLT"},
+  {track:"통합", name:"화성 공장 현장 적용 (OLT)", id:"T-05", s:28, e:31, st:"todo", reqs:[]},
+
+  {track:"통합", cat:"9월 — 천안아산 현장 적용"},
+  {track:"통합", name:"천안아산 공장 현장 적용", id:"T-07", s:32, e:35, st:"todo", reqs:[]},
+
+  {track:"통합", cat:"10월 — 울산 현장 OLT"},
+  {track:"통합", name:"울산 공장 현장 적용 (OLT)", id:"T-06", s:36, e:39, st:"todo", reqs:[]},
 ];
 
 let currentFilter = "all";
