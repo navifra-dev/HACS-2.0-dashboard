@@ -262,7 +262,7 @@
       <thead><tr><th>시점</th><th>로봇 규모</th><th>트랙</th><th>확인 가능 산출물</th></tr></thead>
       <tbody>
         <tr><td class="cp-week">3월 2주<br/>(W10)</td><td>—</td><td class="cp-track">기획 / ACS / PLC</td><td>SDD v0.2 · DB ERD 초안 · VDA5050 설계 문서<br/>지도 메시지 단위 테스트 · VDA5050 MQTT Status 전송 로그 · OPC UA 시뮬레이터 구동 확인</td></tr>
-        <tr><td class="cp-week">3월 말<br/>(W11)</td><td><strong>🤖 1대</strong></td><td class="cp-track">ACS / UI</td><td><strong>[마일스톤] VDA5050 1대 시뮬레이션 단순 경로 주행 영상</strong><br/>A* 경로 생성 시각화 · Backend API Swagger · 맵 편집기 스크린샷 · 로봇 객체 관리 UI</td></tr>
+        <tr><td class="cp-week">3월 말<br/>(W11)</td><td><strong>🤖 1대</strong></td><td class="cp-track">ACS / UI</td><td><strong>[마일스톤] VDA5050 1대 시뮬레이션 주행 영상 (Verification Toolkit 사용)</strong><br/>A* 경로 생성 시각화 · Backend API Swagger · 맵 편집기 스크린샷 · 로봇 객체 관리 UI</td></tr>
         <tr><td class="cp-week">4월 2주<br/>(W14)</td><td>1~2대</td><td class="cp-track">ACS / UI / PLC</td><td>VDA5050 미션 할당(Order) 데모 · 미션 관리 UI 스크린샷<br/>PLC 객체 DB CRUD UI · OPC UA 단일 세션 TAG 수집 로그</td></tr>
         <tr><td class="cp-week">4월 말<br/>(W15)</td><td><strong>🤖 2대</strong></td><td class="cp-track">ACS / PLC</td><td><strong>[마일스톤] 2대 미션 할당 + PLC 연동 시나리오 데모</strong><br/>PLC→Pallet 입고 이벤트 → 로봇 자동 배차 영상 · 2대 기초 트래픽 컨트롤 · Polling/Pub-Sub TAG 수집<br/><em style="color:#D97706;">📋 Verification Toolkit 산출물: SW 150대 검증 보고서 필요 (EVENT vs Polling 방식 차이) — 시뮬레이션 → Verification Toolkit 명칭 정리</em></td></tr>
         <tr><td class="cp-week">5월 2주<br/>(W18)</td><td>2~5대</td><td class="cp-track">ACS / UI / PLC</td><td>경로 계획 (다중 로봇) 시각화 · 충돌 예측/점유 테이블 데모<br/>로봇 상태 대시보드 · 의미지도 관리 UI · Polling vs Pub/Sub 성능 비교 보고서</td></tr>
@@ -345,7 +345,7 @@ const tasks = [
   {track:"기획", name:"화면 설계 (IA/Wireframe/UI Spec)", id:"P-08", s:6, e:15, st:"progress", reqs:[]},
 
   // ===== ACS 트랙 (월별 하이브리드 로드맵: 로봇 N대 + 핵심기능) =====
-  {track:"ACS", cat:"ACS — 1대 VDA5050 시뮬레이션 주행"},
+  {track:"ACS", cat:"ACS — 1대 VDA5050 시뮬레이션 주행 (Verification Toolkit 사용)"},
   {track:"ACS", name:"시스템 아키텍처 설계 (Clean Architecture)", id:"P-02", s:1, e:8, st:"progress", reqs:["1000.1","1000.2"]},
   {track:"ACS", name:"개발환경 구축 (Docker/CI/CD)", id:"P-04", s:0, e:7, st:"done", reqs:[], note:"ACS+UI/UX 공동"},
   {track:"ACS", name:"SDD 문서 작성 (클래스 다이어그램)", id:"P-05", s:6, e:10, st:"progress", reqs:[]},
@@ -353,7 +353,7 @@ const tasks = [
   {track:"ACS", name:"지도 메시지 개발 (Map/Area/Portal)", id:"A-01", s:6, e:10, st:"progress", reqs:[]},
   {track:"ACS", name:"VDA5050 통신 기반 구축 (MQTT Status/Visualization)", id:"A-02", s:7, e:11, st:"progress", reqs:["1.3","1.4","9.1","9.2","9.3","9.4","9.5"]},
   {track:"ACS", name:"Backend API 연동 (로봇 등록/시스템 조회)", id:"A-03", s:7, e:11, st:"progress", reqs:["1.1","8.1","8.2","1007.1"]},
-  {track:"ACS", name:"VDA5050 로봇 시뮬레이터 개발 (1대 단순 경로 주행)", id:"A-04", s:8, e:11, st:"progress", reqs:["1003.1","1.1","1.5","1.11"]},
+  {track:"ACS", name:"VDA5050 로봇 시뮬레이터 개발 (Verification Toolkit 사용)", id:"A-04", s:8, e:11, st:"progress", reqs:["1003.1","1.1","1.5","1.11"]},
   {track:"ACS", name:"경로 생성 기능 (A* / Dijkstra)", id:"A-05", s:8, e:11, st:"progress", reqs:["3.1"]},
 
   {track:"ACS", cat:"ACS — 2대 미션 할당 + PLC 연동"},
@@ -469,7 +469,7 @@ function toggleEdit() {
   document.getElementById("editBtn").classList.toggle("active", editMode);
   document.getElementById("gantt").parentElement.parentElement.classList.toggle("edit-mode", editMode);
   document.getElementById("saveJsonBtn").style.display = editMode ? "" : "none";
-  document.getElementById("loadJsonBtn").style.display = editMode ? "" : "none";
+  // loadJsonBtn은 항상 표시 (편집모드 불필요)
   document.getElementById("saveStatus").style.display = editMode ? "" : "none";
   if (editMode) document.getElementById("saveStatus").textContent = "";
 }

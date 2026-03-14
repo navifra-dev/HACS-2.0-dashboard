@@ -121,8 +121,8 @@
     <div class="desc">대규모 부하 테스트<br/>통합 관제 · 서버 안정성</div>
   </div>
   <div class="s-card" style="border-color:#1E2A78">
-    <div class="month">8월~</div>
-    <div class="desc">E2E 통합 테스트<br/>화성/울산 공장 OLT</div>
+    <div class="month">8~10월</div>
+    <div class="desc">E2E 통합 테스트<br/>화성(8월)·천안아산(9월)·울산(10월) OLT</div>
   </div>
 </div>
 
@@ -177,7 +177,9 @@ const items = [
   { track:"PLC", name:"TAG 수집 + 그룹 관리 + 인터락", s:14, e:19, robot:"" },
   { track:"PLC", name:"대규모 연동 + 안정성 (150 PLC)", s:16, e:29, robot:"" },
   { track:"통합", name:"실 로봇 연계 + E2E 통합", s:28, e:35, robot:"실 로봇" },
-  { track:"통합", name:"화성/울산 공장 현장 적용 (OLT)", s:34, e:39, robot:"현장" },
+  { track:"통합", name:"화성 공장 현장 OLT", s:28, e:31, robot:"현장" },
+  { track:"통합", name:"천안아산 공장 현장 적용", s:32, e:35, robot:"현장" },
+  { track:"통합", name:"울산 공장 현장 적용 (OLT)", s:36, e:39, robot:"현장" },
 ];
 
 // 마일스톤 포인트 (주요 체크포인트) — 카테고리별 하위 내용 + 요구사항 ID
@@ -215,8 +217,14 @@ const milestones = [
     { track:"UI", text:"전체 UI 통합 테스트", reqs:"" },
     { track:"통합", text:"ACS↔UI↔PLC 전체 연계 E2E 시나리오 검증", reqs:"" },
   ]},
-  { week: 39, label: "화성/울산 공장 OLT 완료", subs: [
-    { track:"통합", text:"현장 환경 배포 · 운영 테스트 · 최종 검수 보고서", reqs:"" },
+  { week: 31, label: "화성 공장 OLT 완료 (8월)", subs: [
+    { track:"통합", text:"화성 공장 현장 배포 · 운영 테스트", reqs:"" },
+  ]},
+  { week: 35, label: "천안아산 공장 현장 적용 완료 (9월)", subs: [
+    { track:"통합", text:"천안아산 공장 현장 배포 · 운영 테스트", reqs:"" },
+  ]},
+  { week: 39, label: "울산 공장 OLT 완료 (10월)", subs: [
+    { track:"통합", text:"울산 공장 현장 배포 · 운영 테스트 · 최종 검수 보고서", reqs:"" },
   ]},
 ];
 
