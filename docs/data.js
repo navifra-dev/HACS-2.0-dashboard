@@ -4,8 +4,8 @@
 // ============================================================
 
 let todayWeek  = 10; // W11 (2026.03.14 기준)
-const months     = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월"];
-const totalWeeks = 40;
+const months     = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월","1월","2월"];
+const totalWeeks = 56;
 
 const COLORS = {
   "기획": { bg: "#8B9AD8" },
@@ -161,14 +161,14 @@ const tasks = [
   {track:"통합", name:"VDA5050 실 로봇 연계 테스트", id:"T-03", s:28, e:33, st:"todo", reqs:[]},
   {track:"통합", name:"시스템 통합 연계 E2E Test (전체)", id:"T-04", s:30, e:35, st:"todo", reqs:[]},
 
-  {track:"통합", cat:"8월 — 화성 공장 현장 OLT"},
-  {track:"통합", name:"화성 공장 현장 적용 (OLT)", id:"T-05", s:28, e:31, st:"todo", reqs:[]},
+  {track:"통합", cat:"8월~2월 — 화성 공장 현장 OLT"},
+  {track:"통합", name:"화성 공장 현장 적용 (OLT)", id:"T-05", s:28, e:55, st:"todo", reqs:[]},
 
-  {track:"통합", cat:"9월 — 천안아산 현장 적용"},
-  {track:"통합", name:"천안아산 공장 현장 적용", id:"T-07", s:32, e:35, st:"todo", reqs:[]},
+  {track:"통합", cat:"9월~2월 — 천안아산 현장 적용"},
+  {track:"통합", name:"천안아산 공장 현장 적용", id:"T-07", s:32, e:55, st:"todo", reqs:[]},
 
-  {track:"통합", cat:"10월 — 울산 현장 OLT"},
-  {track:"통합", name:"울산 공장 현장 적용 (OLT)", id:"T-06", s:36, e:39, st:"todo", reqs:[]},
+  {track:"통합", cat:"9월~2월 — 울산 현장 OLT"},
+  {track:"통합", name:"울산 공장 현장 적용 (OLT)", id:"T-06", s:32, e:55, st:"todo", reqs:[]},
 ];
 
 // ============================================================
@@ -190,9 +190,9 @@ const items = [
   { track:"PLC", name:"TAG 수집 + 그룹 관리 + 인터락", s:14, e:19, robot:"" },
   { track:"PLC", name:"대규모 연동 + 안정성 (150 PLC)", s:16, e:29, robot:"" },
   { track:"통합", name:"실 로봇 연계 + E2E 통합", s:28, e:35, robot:"실 로봇" },
-  { track:"통합", name:"화성 공장 현장 OLT", s:28, e:31, robot:"현장" },
-  { track:"통합", name:"천안아산 공장 현장 적용", s:32, e:35, robot:"현장" },
-  { track:"통합", name:"울산 공장 현장 적용 (OLT)", s:36, e:39, robot:"현장" },
+  { track:"통합", name:"화성 공장 현장 OLT", s:28, e:55, robot:"현장" },
+  { track:"통합", name:"천안아산 공장 현장 적용", s:32, e:55, robot:"현장" },
+  { track:"통합", name:"울산 공장 현장 적용 (OLT)", s:32, e:55, robot:"현장" },
 ];
 
 // ============================================================
@@ -207,7 +207,7 @@ const milestones = [
   ]},
   { week: 15, label: "[단일 로봇] 미션 할당 + PLC 연동", subs: [
     { track:"ACS", text:"단일 미션 할당 · PLC 연동 미션 · VDA5050 프로토콜 완료", reqs:"2.1, 2.5, 2.6, 20.1, 1001.1, 4.2, 18.1" },
-    { track:"PLC", text:"OPC UA 연결 · TAG 수집 기초 · PLC 객체 API · OPC-UA SW 150대 검증 영상 필요 (EVENT vs Polling 방식 차이)", reqs:"6.1, 6.2, 23.2, 23.3, 1003.2" },
+    { track:"PLC", text:"OPC-UA SW 시뮬레이션 150대 검증", reqs:"6.1, 6.2, 23.2, 23.3, 1003.2" },
     { track:"UI", text:"맵 편집기 완성 · PLC 객체 관리 UI", reqs:"5.7, 5.8, 5.9, 1003.2, 1003.3" },
     { track:"기획", text:"화면 설계 (IA/Wireframe) 1차 완료", reqs:"" },
   ]},
@@ -232,13 +232,13 @@ const milestones = [
     { track:"UI", text:"전체 UI 통합 테스트", reqs:"" },
     { track:"통합", text:"ACS↔UI↔PLC 전체 연계 E2E 시나리오 검증", reqs:"" },
   ]},
-  { week: 31, label: "화성 공장 OLT 완료 (8월)", subs: [
+  { week: 55, label: "화성 공장 OLT 완료 (8월~2월)", subs: [
     { track:"통합", text:"화성 공장 현장 배포 · 운영 테스트", reqs:"" },
   ]},
-  { week: 35, label: "천안아산 공장 현장 적용 완료 (9월)", subs: [
+  { week: 55, label: "천안아산 공장 현장 적용 완료 (9월~2월)", subs: [
     { track:"통합", text:"천안아산 공장 현장 배포 · 운영 테스트", reqs:"" },
   ]},
-  { week: 39, label: "울산 공장 OLT 완료 (10월)", subs: [
+  { week: 55, label: "울산 공장 OLT 완료 (9월~2월)", subs: [
     { track:"통합", text:"울산 공장 현장 배포 · 운영 테스트 · 최종 검수 보고서", reqs:"" },
   ]},
 ];
