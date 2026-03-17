@@ -122,8 +122,8 @@
     <div class="desc">대규모 부하 테스트<br/>통합 관제 · 서버 안정성</div>
   </div>
   <div class="s-card" style="border-color:#1E2A78">
-    <div class="month">8~10월</div>
-    <div class="desc">E2E 통합 테스트<br/>화성(8월)·천안아산(9월)·울산(10월) OLT</div>
+    <div class="month">8월~2월</div>
+    <div class="desc">E2E 통합 테스트<br/>화성(8월~)·천안아산(9월~)·울산(9월~) 현장 OLT</div>
   </div>
 </div>
 
@@ -167,7 +167,7 @@ function render() {
   // 헤더
   let h1 = `<tr><th style="min-width:320px; position:sticky; left:0; z-index:3;">업무</th>`;
   let h2 = `<tr><th style="position:sticky; left:0; z-index:3;"></th>`;
-  for (let m = 0; m < 10; m++) {
+  for (let m = 0; m < months.length; m++) {
     h1 += `<th colspan="4">${months[m]}</th>`;
     for (let w = 0; w < 4; w++) {
       const wIdx = m * 4 + w;
