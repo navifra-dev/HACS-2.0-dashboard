@@ -43,6 +43,18 @@
       ]
     },
     {
+      "id": "P-02b",
+      "track": "ACS",
+      "name": "시스템 아키텍처 구현 (Clean Architecture)",
+      "s": 8,
+      "e": 12,
+      "st": "progress",
+      "reqs": [
+        "1000.1",
+        "1000.2"
+      ]
+    },
+    {
       "id": "P-04",
       "track": "ACS",
       "name": "개발환경 구축 (Docker/CI/CD)",

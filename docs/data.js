@@ -58,6 +58,7 @@ const tasks = [
   // ===== ACS 트랙 =====
   {track:"ACS", cat:"ACS — 1대 VDA5050 시뮬레이션 주행 (Verification Toolkit 사용)"},
   {track:"ACS", name:"시스템 아키텍처 설계 (Clean Architecture)", id:"P-02", s:1, e:8, st:"progress", reqs:["1000.1","1000.2"]},
+  {track:"ACS", name:"시스템 아키텍처 구현 (Clean Architecture)", id:"P-02b", s:8, e:12, st:"progress", reqs:["1000.1","1000.2"]},
   {track:"ACS", name:"개발환경 구축 (Docker/CI/CD)", id:"P-04", s:0, e:7, st:"done", reqs:[], note:"ACS+UI/UX 공동"},
   {track:"ACS", name:"SDD 문서 작성 (클래스 다이어그램)", id:"P-05", s:6, e:10, st:"progress", reqs:[]},
   {track:"ACS", name:"VDA5050 프로토콜 분석 및 설계", id:"P-06", s:7, e:13, st:"progress", reqs:["1002.2","9.1","9.2","9.3","9.4","9.5"], note:"ACS+UI/UX 공동"},
