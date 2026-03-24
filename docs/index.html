@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
 <title>H-ACS 2.0 대시보드</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -18,7 +19,17 @@
   }
   header .logo { color: #fff; font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
   header .logo span { color: #2563EB; }
+  .header-right { display: flex; align-items: center; gap: 16px; }
   header .date { color: #93B5D8; font-size: 12px; }
+
+  .mode-badge {
+    font-size: 11px; font-weight: 600; padding: 3px 10px;
+    border-radius: 12px; cursor: pointer; transition: all .2s; user-select: none;
+  }
+  .mode-badge.external { background: #334155; color: #93B5D8; }
+  .mode-badge.external:hover { background: #475569; }
+  .mode-badge.internal { background: #2563EB; color: #fff; }
+  .mode-badge.internal:hover { background: #1D4ED8; }
 
   .nav {
     background: #fff;
@@ -40,6 +51,8 @@
   .nav a:hover { color: #1A2744; }
   .nav a.active { color: #2563EB; border-bottom-color: #2563EB; }
   .nav a.external::after { content: " ↗"; font-size: 11px; opacity: 0.6; }
+  .nav a.internal-only { display: none; }
+  body.internal .nav a.internal-only { display: block; }
 
   .frame-wrap {
     display: none;
@@ -88,6 +101,8 @@
     padding: 2px 8px;
     border-radius: 4px;
   }
+  .card.internal-only { display: none; }
+  body.internal .card.internal-only { display: block; }
 
   .section-title {
     font-size: 20px;
@@ -95,27 +110,58 @@
     color: #1A2744;
     margin-bottom: 20px;
   }
+
+  /* 비밀번호 모달 */
+  .pw-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.4); z-index: 100;
+    justify-content: center; align-items: center;
+  }
+  .pw-overlay.show { display: flex; }
+  .pw-box {
+    background: #fff; border-radius: 12px; padding: 28px 32px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.15); min-width: 320px; text-align: center;
+  }
+  .pw-box h3 { font-size: 16px; color: #1A2744; margin-bottom: 16px; }
+  .pw-box input {
+    width: 100%; padding: 10px 14px; border: 2px solid #E2E8F0;
+    border-radius: 8px; font-size: 14px; outline: none; transition: border-color .2s;
+  }
+  .pw-box input:focus { border-color: #2563EB; }
+  .pw-box .pw-btns { display: flex; gap: 8px; margin-top: 14px; }
+  .pw-box button {
+    flex: 1; padding: 10px; border-radius: 8px; font-size: 13px;
+    font-weight: 600; cursor: pointer; transition: all .2s; border: none;
+  }
+  .pw-box .pw-ok { background: #2563EB; color: #fff; }
+  .pw-box .pw-ok:hover { background: #1D4ED8; }
+  .pw-box .pw-cancel { background: #F1F5F9; color: #64748B; }
+  .pw-box .pw-cancel:hover { background: #E2E8F0; }
+  .pw-box .pw-err { color: #DC2626; font-size: 12px; margin-top: 8px; display: none; }
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">NAVIFRA <span>|</span> H-ACS 2.0</div>
-  <div class="date" id="today-date"></div>
+  <div class="header-right">
+    <div class="mode-badge external" id="modeBadge" onclick="onModeBadgeClick()" title="클릭하여 모드 변경">🔒 고객사 모드</div>
+    <div class="date" id="today-date"></div>
+  </div>
 </header>
 
 <nav class="nav">
   <a href="#" class="active" data-tab="home">홈</a>
-  <a href="#" data-tab="milestone">마일스톤</a>
+  <a href="#" data-tab="milestone" class="internal-only">마일스톤</a>
   <a href="#" data-tab="roadmap">로드맵</a>
-  <a href="#" data-tab="trend">진척률 트렌드</a>
-  <a href="https://drive.google.com/drive/folders/1CpGuv2pJkiVBehy3WtJI6MfTuPflnR9i" target="_blank" class="external">주간 보고 (Google Drive)</a>
+  <a href="#" data-tab="trend" class="internal-only">진척률 트렌드</a>
+  <a href="https://drive.google.com/drive/folders/1CpGuv2pJkiVBehy3WtJI6MfTuPflnR9i" target="_blank" class="external internal-only">주간 보고 (Google Drive)</a>
 </nav>
 
 <div id="home" class="home-wrap active">
   <div class="section-title">H-ACS 2.0 프로젝트 대시보드</div>
   <div class="cards">
-    <a class="card" href="#" data-tab="milestone" style="border-color:#1A2744;">
+    <a class="card internal-only" href="#" data-tab="milestone" style="border-color:#1A2744;">
       <h3>📊 마일스톤</h3>
       <p>전체 Task 진척률 및 간트 차트</p>
     </a>
@@ -123,11 +169,11 @@
       <h3>🗺️ 로드맵</h3>
       <p>월별 개발 로드맵 및 마일스톤</p>
     </a>
-    <a class="card" href="#" data-tab="trend" style="border-color:#0D9488;">
+    <a class="card internal-only" href="#" data-tab="trend" style="border-color:#0D9488;">
       <h3>📈 진척률 트렌드</h3>
       <p>주차별 완료율 추이</p>
     </a>
-    <a class="card" href="https://drive.google.com/drive/folders/1CpGuv2pJkiVBehy3WtJI6MfTuPflnR9i" target="_blank" style="border-color:#D97706;">
+    <a class="card internal-only" href="https://drive.google.com/drive/folders/1CpGuv2pJkiVBehy3WtJI6MfTuPflnR9i" target="_blank" style="border-color:#D97706;">
       <h3>📁 주간 보고</h3>
       <p>PPTX 보고서 모음</p>
       <span class="ext-badge">Google Drive ↗</span>
@@ -145,11 +191,95 @@
   <iframe src="HACS2.0_진척률_트렌드.html"></iframe>
 </div>
 
-<script>
-  const d = new Date();
-  document.getElementById('today-date').textContent =
-    `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} 기준`;
+<!-- 비밀번호 모달 -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-box">
+    <h3>🔑 내부 모드 전환</h3>
+    <input type="password" id="pwInput" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')checkPw()"/>
+    <div class="pw-btns">
+      <button class="pw-cancel" onclick="closePw()">취소</button>
+      <button class="pw-ok" onclick="checkPw()">확인</button>
+    </div>
+    <div class="pw-err" id="pwErr">비밀번호가 올바르지 않습니다.</div>
+  </div>
+</div>
 
+<script>
+  // ─── 설정 ───
+  // 비밀번호 해시 (SHA-256). 기본값: "navifra2026"
+  const PW_HASH = "a]HASH";  // placeholder, 아래에서 초기화
+  const INTERNAL_KEY = "hacs_mode";
+
+  // 간단한 해시 비교 (SHA-256 사용 불가 환경 대비, 평문 비교)
+  // 보안이 중요하면 서버 인증으로 교체 권장
+  const INTERNAL_PW = "navifra2026";
+
+  // ─── 상태 관리 ───
+  function isInternal() {
+    return sessionStorage.getItem(INTERNAL_KEY) === "1"
+      || new URLSearchParams(location.search).get("mode") === "internal";
+  }
+
+  function setInternal(val) {
+    if (val) {
+      sessionStorage.setItem(INTERNAL_KEY, "1");
+      document.body.classList.add("internal");
+    } else {
+      sessionStorage.removeItem(INTERNAL_KEY);
+      document.body.classList.remove("internal");
+    }
+    updateBadge();
+  }
+
+  function updateBadge() {
+    const badge = document.getElementById("modeBadge");
+    if (document.body.classList.contains("internal")) {
+      badge.className = "mode-badge internal";
+      badge.innerHTML = "🔓 내부 모드";
+      badge.title = "클릭하여 고객사 모드로 전환";
+    } else {
+      badge.className = "mode-badge external";
+      badge.innerHTML = "🔒 고객사 모드";
+      badge.title = "클릭하여 내부 모드로 전환";
+    }
+  }
+
+  // ─── 모드 전환 ───
+  function onModeBadgeClick() {
+    if (document.body.classList.contains("internal")) {
+      // 내부 → 고객사
+      setInternal(false);
+      switchTab("home");
+    } else {
+      // 고객사 → 내부 (비밀번호 필요)
+      document.getElementById("pwOverlay").classList.add("show");
+      document.getElementById("pwInput").value = "";
+      document.getElementById("pwErr").style.display = "none";
+      setTimeout(() => document.getElementById("pwInput").focus(), 100);
+    }
+  }
+
+  function checkPw() {
+    const input = document.getElementById("pwInput").value;
+    if (input === INTERNAL_PW) {
+      closePw();
+      setInternal(true);
+    } else {
+      document.getElementById("pwErr").style.display = "block";
+      document.getElementById("pwInput").select();
+    }
+  }
+
+  function closePw() {
+    document.getElementById("pwOverlay").classList.remove("show");
+  }
+
+  // 오버레이 바깥 클릭으로 닫기
+  document.getElementById("pwOverlay").addEventListener("click", e => {
+    if (e.target === e.currentTarget) closePw();
+  });
+
+  // ─── 탭 전환 ───
   function switchTab(tabId) {
     document.querySelectorAll('.nav a:not(.external)').forEach(a => a.classList.remove('active'));
     document.querySelectorAll('.frame-wrap, .home-wrap').forEach(el => el.classList.remove('active'));
@@ -160,9 +290,22 @@
   document.querySelectorAll('[data-tab]').forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault();
-      switchTab(el.dataset.tab);
+      const tab = el.dataset.tab;
+      // 고객사 모드에서 내부 전용 탭 접근 차단
+      if (!document.body.classList.contains("internal") && el.classList.contains("internal-only")) return;
+      switchTab(tab);
     });
   });
+
+  // ─── 초기화 ───
+  const d = new Date();
+  document.getElementById('today-date').textContent =
+    `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} 기준`;
+
+  // URL 파라미터 또는 세션 기반 자동 전환
+  if (isInternal()) {
+    setInternal(true);
+  }
 </script>
 </body>
 </html>
