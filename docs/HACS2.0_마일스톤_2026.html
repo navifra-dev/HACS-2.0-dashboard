@@ -369,9 +369,6 @@ function importJSON(event) {
           updated++;
         }
       });
-      if (data.todayWeek !== undefined) {
-        todayWeek = data.todayWeek;
-      }
       saveToLocal();
       render();
       renderReqMap();
@@ -812,7 +809,6 @@ function applyData(data) {
       count++;
     }
   });
-  if (data.todayWeek !== undefined) todayWeek = data.todayWeek;
   return count;
 }
 

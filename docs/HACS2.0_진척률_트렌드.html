@@ -160,7 +160,12 @@
 // ============================================
 const months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월"];
 const totalWeeks = 40;
-const todayWeek = 9; // 3월 2주 (매주 업데이트)
+// 2026년 1월 1일 기준으로 현재 주차 자동 계산
+const todayWeek = (function() {
+  const start = new Date(2026, 0, 1);
+  const now = new Date();
+  return Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
+})();
 
 const TRACK_COLORS = {
   "기획": "#8B9AD8", "ACS": "#2B3990", "UI": "#5A6BC4", "PLC": "#4A5BC7", "통합": "#1E2A78"
