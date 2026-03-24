@@ -63,6 +63,16 @@
   .ms-item .ms-time { font-size: 11px; color: #888; font-weight: 600; }
   .ms-item .ms-title { font-size: 14px; font-weight: 700; color: #2B3990; margin: 4px 0; }
   .ms-item .ms-desc { font-size: 12px; color: #555; line-height: 1.6; margin-top: 8px; }
+
+  /* 마일스톤 상태별 스타일 */
+  .ms-item.ms-past { opacity: 0.45; }
+  .ms-item.ms-past .ms-title { text-decoration: line-through; color: #888; }
+  .ms-item.ms-past::before { background: #aaa; border-color: #aaa; }
+
+  .ms-item.ms-current { background: linear-gradient(90deg, rgba(61,79,166,0.08) 0%, rgba(61,79,166,0) 100%); border-left: 3px solid #3D4FA6; border-radius: 6px; padding-left: 24px; margin-left: -7px; }
+  .ms-item.ms-current .ms-title { color: #2B3990; font-size: 15px; }
+  .ms-item.ms-current .ms-time { color: #e65100; font-weight: 700; }
+  .ms-item.ms-current::before { background: #e65100; border-color: #e65100; box-shadow: 0 0 0 4px rgba(230,81,0,0.2); }
   .ms-cat { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 4px; }
   .ms-cat-tag { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; color: #fff; white-space: nowrap; min-width: 42px; text-align: center; flex-shrink: 0; margin-top: 1px; }
   .ms-cat-text { font-size: 12px; color: #555; line-height: 1.5; }
@@ -255,14 +265,16 @@ function render() {
   const timeline = document.getElementById("msTimeline");
   timeline.innerHTML = milestones.map((ms, i) => {
     const isPast = ms.week < todayWeek;
+    const isCurrent = (ms.week >= todayWeek && ms.week < todayWeek + 2);
+    const stateClass = isPast ? 'ms-past' : (isCurrent ? 'ms-current' : '');
     const subsHtml = (ms.subs || []).map(sub => {
       const c = (COLORS[sub.track] || {bg:"#888"}).bg;
       const reqsHtml = sub.reqs ? `<span class="ms-reqs">[${sub.reqs}]</span>` : "";
       return `<div class="ms-cat"><span class="ms-cat-tag" style="background:${c}">${sub.track}</span><span class="ms-cat-text">${sub.text} ${reqsHtml}</span></div>`;
     }).join("");
     return `
-      <div class="ms-item ${isPast ? 'active' : ''} milestone">
-        <div class="ms-time">W${ms.week} · ${weekToLabel(ms.week)}</div>
+      <div class="ms-item ${isPast ? 'active' : ''} ${stateClass} milestone">
+        <div class="ms-time">${isPast ? '✓ ' : (isCurrent ? '📍 ' : '')}W${ms.week} · ${weekToLabel(ms.week)}${isCurrent ? ' — 이번 주!' : ''}</div>
         <div class="ms-title">${ms.label}</div>
         <div class="ms-desc">${subsHtml}</div>
       </div>

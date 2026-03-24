@@ -145,6 +145,13 @@
   .cp-table .cp-week { font-weight: 700; color: #f57f17; white-space: nowrap; width: 90px; }
   .cp-table .cp-track { font-weight: 600; color: #555; font-size: 11px; }
 
+  /* 체크포인트 행 상태별 스타일 */
+  .cp-table tr.cp-past td { opacity: 0.4; text-decoration: line-through; color: #999; }
+  .cp-table tr.cp-past .cp-week { color: #bbb; }
+  .cp-table tr.cp-current td { background: rgba(245,127,23,0.1) !important; }
+  .cp-table tr.cp-current .cp-week { color: #e65100; font-size: 13px; }
+  .cp-table tr.cp-current td:first-child { border-left: 3px solid #e65100; }
+
   /* Req mapping table */
   .req-map { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px; }
   .req-map th { background: #2B3990; color: #fff; padding: 7px 10px; text-align: left; font-size: 11px; }
@@ -263,20 +270,20 @@
     <table class="cp-table">
       <thead><tr><th>시점</th><th>로봇 규모</th><th>트랙</th><th>확인 가능 산출물</th></tr></thead>
       <tbody>
-        <tr><td class="cp-week">3월 2주<br/>(W10)</td><td>—</td><td class="cp-track">기획 / ACS / PLC</td><td>SDD v0.2 · DB ERD 초안 · VDA5050 설계 문서<br/>지도 메시지 단위 테스트 · VDA5050 MQTT Status 전송 로그 · OPC UA 시뮬레이터 구동 확인</td></tr>
-        <tr><td class="cp-week">3월 말<br/>(W11)</td><td><strong>🤖 1대</strong></td><td class="cp-track">ACS / UI</td><td><strong>[마일스톤] VDA5050 1대 시뮬레이션 주행 영상 (Verification Toolkit 사용)</strong><br/>A* 경로 생성 시각화 · Backend API Swagger · 맵 편집기 스크린샷 · 로봇 객체 관리 UI</td></tr>
-        <tr><td class="cp-week">4월 2주<br/>(W14)</td><td>1~2대</td><td class="cp-track">ACS / UI / PLC</td><td>VDA5050 미션 할당(Order) 데모 · 미션 관리 UI 스크린샷<br/>PLC 객체 DB CRUD UI · OPC UA 단일 세션 TAG 수집 로그</td></tr>
-        <tr><td class="cp-week">4월 말<br/>(W15)</td><td><strong>🤖 2대</strong></td><td class="cp-track">ACS / PLC</td><td><strong>[마일스톤] 2대 미션 할당 + PLC 연동 시나리오 데모</strong><br/>PLC→Pallet 입고 이벤트 → 로봇 자동 배차 영상 · 2대 기초 트래픽 컨트롤 · Polling/Pub-Sub TAG 수집<br/><em style="color:#D97706;">OPC-UA SW 150대 검증 영상 필요 (EVENT vs Polling 방식 차이)</em></td></tr>
-        <tr><td class="cp-week">5월 2주<br/>(W18)</td><td>2~5대</td><td class="cp-track">ACS / UI / PLC</td><td>경로 계획 (다중 로봇) 시각화 · 충돌 예측/점유 테이블 데모<br/>로봇 상태 대시보드 · 의미지도 관리 UI · Polling vs Pub/Sub 성능 비교 보고서</td></tr>
-        <tr><td class="cp-week">5월 말<br/>(W19)</td><td><strong>🤖 5대</strong></td><td class="cp-track">ACS / UI</td><td><strong>[마일스톤] 5대 동시 경로 계획 + 충돌 회피 영상</strong><br/>미션 할당 전략 (최적 로봇 선택) 데모 · ETA 추정 계산 데모 · 미션 관리 UI 완성</td></tr>
-        <tr><td class="cp-week">6월 2주<br/>(W22)</td><td>5~10대</td><td class="cp-track">ACS / UI / PLC</td><td>10대 트래픽 컨트롤 확장 데모 · ETA 학습 기능 데모<br/>Object 편집 (Snap/정렬) · 150 PLC 다중 세션 접속 로그</td></tr>
-        <tr><td class="cp-week">6월 말<br/>(W23)</td><td><strong>🤖 10~20대</strong></td><td class="cp-track">ACS / UI / PLC</td><td><strong>[마일스톤] 10~20대 운영 + 수동제어/자동충전 시나리오 영상</strong><br/>ETA 진척률 표시 UI · 장애물 감지 가시화 · 1,500 TAG 분산 Reading 성능 결과</td></tr>
-        <tr><td class="cp-week">7월 2주<br/>(W26)</td><td>20~50대</td><td class="cp-track">ACS / UI / PLC</td><td>50대 시뮬레이션 부하 테스트 1차 결과 · 다층 관제 모니터링 화면<br/>H-PLC 다중 인스턴스 운영 로그 · PLC 모니터링 UI</td></tr>
-        <tr><td class="cp-week">7월 말<br/>(W27)</td><td><strong>🤖 50대</strong></td><td class="cp-track">ACS / UI / PLC</td><td><strong>[마일스톤] 50대 부하 테스트 완료 + 통합 관제 데모</strong><br/>50대 동시 경로/트래픽 최적화 영상 · ACS Server 안정성 확인 · H-ACS+H-PLC 단일 서버 통합 · Playback 기능</td></tr>
-        <tr><td class="cp-week">8월<br/>(W28~31)</td><td><strong>실 로봇</strong></td><td class="cp-track">통합</td><td><strong>[마일스톤] 실 로봇 연계 + E2E 통합 테스트</strong><br/>ACS↔UI 연계 · ACS↔H-PLC 연계 · VDA5050 실 로봇 테스트 영상 · 차트/통계 대시보드</td></tr>
-        <tr><td class="cp-week">8월<br/>(W29~32)</td><td><strong>현장</strong></td><td class="cp-track">통합</td><td><strong>[마일스톤] 화성 공장 OLT</strong><br/>화성 현장 테스트 리포트</td></tr>
-        <tr><td class="cp-week">9월<br/>(W33~36)</td><td><strong>현장</strong></td><td class="cp-track">통합</td><td><strong>[마일스톤] 천안아산 현장 적용</strong><br/>천안아산 현장 배포 · 미들웨어 전체 적용 (NaviCore 포함)</td></tr>
-        <tr><td class="cp-week">10월<br/>(W37~40)</td><td><strong>현장</strong></td><td class="cp-track">통합</td><td><strong>[마일스톤] 울산 공장 OLT</strong><br/>울산 현장 테스트 리포트 · 최종 검수 보고서</td></tr>
+        <tr data-week="10"><td class="cp-week">3월 2주<br/>(W10)</td><td>—</td><td class="cp-track">기획 / ACS / PLC</td><td>SDD v0.2 · DB ERD 초안 · VDA5050 설계 문서<br/>지도 메시지 단위 테스트 · VDA5050 MQTT Status 전송 로그 · OPC UA 시뮬레이터 구동 확인</td></tr>
+        <tr data-week="11"><td class="cp-week">3월 말<br/>(W11)</td><td><strong>🤖 1대</strong></td><td class="cp-track">ACS / UI</td><td><strong>[마일스톤] VDA5050 1대 시뮬레이션 주행 영상 (Verification Toolkit 사용)</strong><br/>A* 경로 생성 시각화 · Backend API Swagger · 맵 편집기 스크린샷 · 로봇 객체 관리 UI</td></tr>
+        <tr data-week="14"><td class="cp-week">4월 2주<br/>(W14)</td><td>1~2대</td><td class="cp-track">ACS / UI / PLC</td><td>VDA5050 미션 할당(Order) 데모 · 미션 관리 UI 스크린샷<br/>PLC 객체 DB CRUD UI · OPC UA 단일 세션 TAG 수집 로그</td></tr>
+        <tr data-week="15"><td class="cp-week">4월 말<br/>(W15)</td><td><strong>🤖 2대</strong></td><td class="cp-track">ACS / PLC</td><td><strong>[마일스톤] 2대 미션 할당 + PLC 연동 시나리오 데모</strong><br/>PLC→Pallet 입고 이벤트 → 로봇 자동 배차 영상 · 2대 기초 트래픽 컨트롤 · Polling/Pub-Sub TAG 수집<br/><em style="color:#D97706;">OPC-UA SW 150대 검증 영상 필요 (EVENT vs Polling 방식 차이)</em></td></tr>
+        <tr data-week="18"><td class="cp-week">5월 2주<br/>(W18)</td><td>2~5대</td><td class="cp-track">ACS / UI / PLC</td><td>경로 계획 (다중 로봇) 시각화 · 충돌 예측/점유 테이블 데모<br/>로봇 상태 대시보드 · 의미지도 관리 UI · Polling vs Pub/Sub 성능 비교 보고서</td></tr>
+        <tr data-week="19"><td class="cp-week">5월 말<br/>(W19)</td><td><strong>🤖 5대</strong></td><td class="cp-track">ACS / UI</td><td><strong>[마일스톤] 5대 동시 경로 계획 + 충돌 회피 영상</strong><br/>미션 할당 전략 (최적 로봇 선택) 데모 · ETA 추정 계산 데모 · 미션 관리 UI 완성</td></tr>
+        <tr data-week="22"><td class="cp-week">6월 2주<br/>(W22)</td><td>5~10대</td><td class="cp-track">ACS / UI / PLC</td><td>10대 트래픽 컨트롤 확장 데모 · ETA 학습 기능 데모<br/>Object 편집 (Snap/정렬) · 150 PLC 다중 세션 접속 로그</td></tr>
+        <tr data-week="23"><td class="cp-week">6월 말<br/>(W23)</td><td><strong>🤖 10~20대</strong></td><td class="cp-track">ACS / UI / PLC</td><td><strong>[마일스톤] 10~20대 운영 + 수동제어/자동충전 시나리오 영상</strong><br/>ETA 진척률 표시 UI · 장애물 감지 가시화 · 1,500 TAG 분산 Reading 성능 결과</td></tr>
+        <tr data-week="26"><td class="cp-week">7월 2주<br/>(W26)</td><td>20~50대</td><td class="cp-track">ACS / UI / PLC</td><td>50대 시뮬레이션 부하 테스트 1차 결과 · 다층 관제 모니터링 화면<br/>H-PLC 다중 인스턴스 운영 로그 · PLC 모니터링 UI</td></tr>
+        <tr data-week="27"><td class="cp-week">7월 말<br/>(W27)</td><td><strong>🤖 50대</strong></td><td class="cp-track">ACS / UI / PLC</td><td><strong>[마일스톤] 50대 부하 테스트 완료 + 통합 관제 데모</strong><br/>50대 동시 경로/트래픽 최적화 영상 · ACS Server 안정성 확인 · H-ACS+H-PLC 단일 서버 통합 · Playback 기능</td></tr>
+        <tr data-week="31"><td class="cp-week">8월<br/>(W28~31)</td><td><strong>실 로봇</strong></td><td class="cp-track">통합</td><td><strong>[마일스톤] 실 로봇 연계 + E2E 통합 테스트</strong><br/>ACS↔UI 연계 · ACS↔H-PLC 연계 · VDA5050 실 로봇 테스트 영상 · 차트/통계 대시보드</td></tr>
+        <tr data-week="32"><td class="cp-week">8월<br/>(W29~32)</td><td><strong>현장</strong></td><td class="cp-track">통합</td><td><strong>[마일스톤] 화성 공장 OLT</strong><br/>화성 현장 테스트 리포트</td></tr>
+        <tr data-week="36"><td class="cp-week">9월<br/>(W33~36)</td><td><strong>현장</strong></td><td class="cp-track">통합</td><td><strong>[마일스톤] 천안아산 현장 적용</strong><br/>천안아산 현장 배포 · 미들웨어 전체 적용 (NaviCore 포함)</td></tr>
+        <tr data-week="40"><td class="cp-week">10월<br/>(W37~40)</td><td><strong>현장</strong></td><td class="cp-track">통합</td><td><strong>[마일스톤] 울산 공장 OLT</strong><br/>울산 현장 테스트 리포트 · 최종 검수 보고서</td></tr>
       </tbody>
     </table>
   </div>
@@ -563,6 +570,21 @@ function render() {
   cpTr.innerHTML = cpCells;
   tbody.appendChild(cpTr);
   table.appendChild(tbody);
+
+  // 체크포인트 테이블 행 상태 스타일 적용
+  highlightCheckpointRows();
+}
+
+function highlightCheckpointRows() {
+  document.querySelectorAll('.cp-table tbody tr[data-week]').forEach(tr => {
+    const w = parseInt(tr.dataset.week);
+    tr.classList.remove('cp-past', 'cp-current');
+    if (w < todayWeek) {
+      tr.classList.add('cp-past');
+    } else if (w >= todayWeek && w < todayWeek + 4) {
+      tr.classList.add('cp-current');
+    }
+  });
 }
 
 function renderReqMap() {
