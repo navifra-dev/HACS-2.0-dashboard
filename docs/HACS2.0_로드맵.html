@@ -69,28 +69,41 @@
 
   @media print {
     .export-bar { display: none !important; }
-    body { font-size: 10px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .header { padding: 16px 20px; }
-    .main { padding: 12px 20px; }
-    .gantt-area { overflow-x: visible; }
-    .gantt { min-width: unset; width: 100%; table-layout: fixed; }
-    .item-name { position: static; min-width: 200px !important; font-size: 10px; padding: 6px 8px !important; white-space: normal; }
-    .week-cell { width: auto; min-width: unset; max-width: unset; height: 28px; }
-    .week-cell.today-line { border-left: 3px solid #ff5722 !important; }
-    .gantt thead tr:first-child th { font-size: 10px; padding: 6px 0; }
-    .gantt thead tr:nth-child(2) th { font-size: 8px; padding: 3px 0; }
-    .summary { gap: 8px; margin-bottom: 16px; }
-    .s-card { padding: 8px 10px; min-width: 80px; }
-    .s-card .month { font-size: 11px; }
-    .s-card .desc { font-size: 9px; }
-    .milestones-section { margin-top: 16px; }
-    .ms-item { padding: 6px 0 10px 16px; }
-    .ms-item .ms-time { font-size: 9px; }
-    .ms-item .ms-title { font-size: 11px; }
-    .ms-cat-tag { font-size: 8px; }
-    .ms-cat-text { font-size: 10px; }
-    .legend { font-size: 10px; padding: 8px 0; }
-    @page { size: A3 landscape; margin: 10mm; }
+    body { font-size: 8px; -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; }
+    .header { padding: 10px 12px; }
+    .header h1 { font-size: 18px; }
+    .header .sub { font-size: 10px; }
+    .header .date { font-size: 9px; }
+    .main { padding: 8px 12px; }
+    .gantt-area { overflow-x: visible; overflow-y: visible; }
+    .gantt { min-width: unset; width: 100%; table-layout: fixed; border-collapse: collapse; }
+    .item-name { position: static; min-width: 140px !important; max-width: 140px !important; width: 140px !important; font-size: 7px; padding: 4px 4px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-name .track-tag { font-size: 6px; padding: 1px 4px; margin-right: 3px; }
+    .item-name .robot { font-size: 7px; }
+    .week-cell { width: auto; min-width: unset; max-width: unset; height: 20px; }
+    .week-cell.today-line { border-left: 2px solid #ff5722 !important; }
+    .ms-diamond { width: 8px; height: 8px; }
+    .gantt thead tr:first-child th { font-size: 7px; padding: 4px 0; }
+    .gantt thead tr:nth-child(2) th { font-size: 6px; padding: 2px 0; }
+    .summary { gap: 6px; margin-bottom: 10px; }
+    .s-card { padding: 6px 8px; min-width: 60px; }
+    .s-card .month { font-size: 9px; margin-bottom: 2px; }
+    .s-card .desc { font-size: 7px; }
+    .milestones-section { margin-top: 10px; }
+    .milestones-section h3 { font-size: 12px; margin-bottom: 8px; }
+    .ms-timeline { padding-left: 16px; }
+    .ms-item { padding: 4px 0 8px 12px; }
+    .ms-item::before { width: 10px; height: 10px; left: -14px; }
+    .ms-item .ms-time { font-size: 7px; }
+    .ms-item .ms-title { font-size: 9px; }
+    .ms-item .ms-desc { font-size: 8px; margin-top: 4px; }
+    .ms-cat-tag { font-size: 6px; padding: 1px 4px; min-width: 30px; }
+    .ms-cat-text { font-size: 8px; }
+    .ms-reqs { font-size: 7px; }
+    .legend { font-size: 8px; padding: 6px 0; gap: 12px; }
+    .legend-color { width: 16px; height: 7px; }
+    .legend-diamond { width: 7px; height: 7px; }
+    @page { size: A3 landscape; margin: 8mm; }
   }
   .export-bar { display: flex; gap: 10px; padding: 12px 48px; background: #f8fafc; border-bottom: 1px solid #eee; }
   .export-btn { padding: 8px 20px; border-radius: 8px; border: 1px solid #2B3990; background: #fff; color: #2B3990; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .2s; }
