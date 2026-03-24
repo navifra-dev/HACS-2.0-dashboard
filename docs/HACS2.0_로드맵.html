@@ -68,9 +68,29 @@
   .ms-reqs { font-size: 10px; color: #999; margin-left: 2px; }
 
   @media print {
-    .header { padding: 20px 24px; }
-    .main { padding: 16px 24px; }
-    body { font-size: 11px; }
+    .export-bar { display: none !important; }
+    body { font-size: 10px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .header { padding: 16px 20px; }
+    .main { padding: 12px 20px; }
+    .gantt-area { overflow-x: visible; }
+    .gantt { min-width: unset; width: 100%; table-layout: fixed; }
+    .item-name { position: static; min-width: 200px !important; font-size: 10px; padding: 6px 8px !important; white-space: normal; }
+    .week-cell { width: auto; min-width: unset; max-width: unset; height: 28px; }
+    .week-cell.today-line { border-left: 3px solid #ff5722 !important; }
+    .gantt thead tr:first-child th { font-size: 10px; padding: 6px 0; }
+    .gantt thead tr:nth-child(2) th { font-size: 8px; padding: 3px 0; }
+    .summary { gap: 8px; margin-bottom: 16px; }
+    .s-card { padding: 8px 10px; min-width: 80px; }
+    .s-card .month { font-size: 11px; }
+    .s-card .desc { font-size: 9px; }
+    .milestones-section { margin-top: 16px; }
+    .ms-item { padding: 6px 0 10px 16px; }
+    .ms-item .ms-time { font-size: 9px; }
+    .ms-item .ms-title { font-size: 11px; }
+    .ms-cat-tag { font-size: 8px; }
+    .ms-cat-text { font-size: 10px; }
+    .legend { font-size: 10px; padding: 8px 0; }
+    @page { size: A3 landscape; margin: 10mm; }
   }
   .export-bar { display: flex; gap: 10px; padding: 12px 48px; background: #f8fafc; border-bottom: 1px solid #eee; }
   .export-btn { padding: 8px 20px; border-radius: 8px; border: 1px solid #2B3990; background: #fff; color: #2B3990; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .2s; }
@@ -88,6 +108,7 @@
   <button class="export-btn primary" onclick="exportPNG('full')">📸 전체 PNG 내보내기</button>
   <button class="export-btn" onclick="exportPNG('gantt')">📊 간트 차트만</button>
   <button class="export-btn" onclick="exportPNG('milestones')">🏁 마일스톤만</button>
+  <button class="export-btn" onclick="exportPDF()" style="border-color:#e65100;color:#e65100;">📄 PDF 내보내기</button>
 </div>
 
 <div id="capture-full">
@@ -273,6 +294,10 @@ function exportPNG(mode) {
     btn.textContent = origText;
     btn.disabled = false;
   });
+}
+
+function exportPDF() {
+  window.print();
 }
 </script>
 </body>
