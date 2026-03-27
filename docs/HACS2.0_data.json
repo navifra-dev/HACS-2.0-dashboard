@@ -1,7 +1,7 @@
 {
   "version": "2.0",
-  "exportDate": "2026-03-16T09:23:41.896Z",
-  "todayWeek": 10,
+  "exportDate": "2026-03-27T08:24:24.495Z",
+  "todayWeek": 12,
   "tasks": [
     {
       "id": "P-01",
@@ -18,7 +18,7 @@
       "name": "데이터 모델링 및 DB 설계 (ERD)",
       "s": 4,
       "e": 10,
-      "st": "progress",
+      "st": "done",
       "reqs": []
     },
     {
@@ -36,7 +36,7 @@
       "name": "시스템 아키텍처 설계 (Clean Architecture)",
       "s": 1,
       "e": 8,
-      "st": "progress",
+      "st": "done",
       "reqs": [
         "1000.1",
         "1000.2"
@@ -48,7 +48,7 @@
       "name": "시스템 아키텍처 구현 (Clean Architecture)",
       "s": 8,
       "e": 12,
-      "st": "progress",
+      "st": "done",
       "reqs": [
         "1000.1",
         "1000.2"
@@ -69,7 +69,7 @@
       "name": "SDD 문서 작성 (클래스 다이어그램)",
       "s": 6,
       "e": 10,
-      "st": "progress",
+      "st": "done",
       "reqs": []
     },
     {
@@ -78,7 +78,7 @@
       "name": "VDA5050 프로토콜 분석 및 설계",
       "s": 7,
       "e": 13,
-      "st": "progress",
+      "st": "done",
       "reqs": [
         "1002.2",
         "9.1",
@@ -94,7 +94,7 @@
       "name": "지도 메시지 개발 (Map/Area/Portal)",
       "s": 6,
       "e": 10,
-      "st": "progress",
+      "st": "done",
       "reqs": []
     },
     {
@@ -103,7 +103,7 @@
       "name": "VDA5050 통신 기반 구축 (MQTT Status/Visualization)",
       "s": 7,
       "e": 11,
-      "st": "progress",
+      "st": "done",
       "reqs": [
         "1.3",
         "1.4",
@@ -120,7 +120,7 @@
       "name": "Backend API 연동 (로봇 등록/시스템 조회)",
       "s": 7,
       "e": 11,
-      "st": "progress",
+      "st": "done",
       "reqs": [
         "1.1",
         "8.1",
@@ -134,7 +134,7 @@
       "name": "VDA5050 로봇 시뮬레이터 개발 (1대 단순 경로 주행)",
       "s": 8,
       "e": 11,
-      "st": "progress",
+      "st": "done",
       "reqs": [
         "1003.1",
         "1.1",
@@ -148,7 +148,7 @@
       "name": "경로 생성 기능 (A* / Dijkstra)",
       "s": 8,
       "e": 11,
-      "st": "progress",
+      "st": "done",
       "reqs": [
         "3.1"
       ]
@@ -159,7 +159,7 @@
       "name": "VDA5050 미션 할당 개발 (Order)",
       "s": 12,
       "e": 15,
-      "st": "todo",
+      "st": "progress",
       "reqs": [
         "2.5",
         "2.6"
@@ -171,7 +171,7 @@
       "name": "미션 추가/관리 기능",
       "s": 12,
       "e": 15,
-      "st": "todo",
+      "st": "progress",
       "reqs": [
         "2.1",
         "2.3",
@@ -195,7 +195,7 @@
       "name": "로봇 접속/상태 관리 (VDA5050 기반)",
       "s": 12,
       "e": 15,
-      "st": "todo",
+      "st": "progress",
       "reqs": [
         "1.3",
         "1.4",
@@ -508,9 +508,9 @@
       "id": "U-06",
       "track": "UI",
       "name": "로봇 상태 실시간 대시보드",
-      "s": 12,
-      "e": 17,
-      "st": "todo",
+      "s": 8,
+      "e": 8,
+      "st": "done",
       "reqs": [
         "1006.1",
         "1.15",
@@ -708,7 +708,7 @@
       "name": "H-PLC 아키텍처 설계",
       "s": 7,
       "e": 11,
-      "st": "progress",
+      "st": "done",
       "reqs": [
         "6.1",
         "6.2"
@@ -720,7 +720,7 @@
       "name": "가상 PLC 테스트 환경 구축 (OPC UA Simulator)",
       "s": 7,
       "e": 11,
-      "st": "todo",
+      "st": "done",
       "reqs": [
         "6.1"
       ]
@@ -731,7 +731,7 @@
       "name": "OPC UA Client 기본 구현 (단일 세션 연결)",
       "s": 9,
       "e": 13,
-      "st": "todo",
+      "st": "progress",
       "reqs": [
         "6.2"
       ]
@@ -742,7 +742,7 @@
       "name": "PLC 객체 등록/수정/삭제 API 개발",
       "s": 10,
       "e": 14,
-      "st": "todo",
+      "st": "progress",
       "reqs": [
         "1003.2"
       ]
@@ -753,7 +753,7 @@
       "name": "Polling 방식 TAG 수집 구현 및 검증",
       "s": 11,
       "e": 15,
-      "st": "todo",
+      "st": "progress",
       "reqs": [
         "23.2",
         "23.3"
@@ -765,7 +765,7 @@
       "name": "Pub/Sub(이벤트) 방식 TAG 수집 구현 및 검증",
       "s": 11,
       "e": 15,
-      "st": "todo",
+      "st": "progress",
       "reqs": [
         "23.2",
         "23.3"
@@ -952,18 +952,18 @@
       "reqs": []
     },
     {
-      "id": "T-06",
+      "id": "T-07",
       "track": "통합",
-      "name": "울산 공장 현장 적용 (OLT)",
+      "name": "천안아산 공장 현장 적용",
       "s": 32,
       "e": 55,
       "st": "todo",
       "reqs": []
     },
     {
-      "id": "T-07",
+      "id": "T-06",
       "track": "통합",
-      "name": "천안아산 공장 현장 적용",
+      "name": "울산 공장 현장 적용 (OLT)",
       "s": 32,
       "e": 55,
       "st": "todo",
