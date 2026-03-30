@@ -79,6 +79,7 @@ const tasks = [
   {track:"ACS", name:"미션 추가/관리 기능", id:"A-07", s:12, e:15, st:"todo", reqs:["2.1","2.3","2.4"]},
   {track:"ACS", name:"버퍼 미션 생성 로직", id:"A-07b", s:13, e:15, st:"todo", reqs:["20.1"]},
   {track:"ACS", name:"로봇 접속/상태 관리 (VDA5050 기반)", id:"A-08", s:12, e:15, st:"todo", reqs:["1.3","1.4","21.1","1006.1"]},
+  {track:"ACS", name:"Sleep Schedule 관리 / Sleep·Wakeup 기능", id:"A-08b", s:12, e:13, st:"todo", reqs:["1004.1","1004.2"]},
   {track:"ACS", name:"Pallet 객체 DB 및 관리", id:"A-09", s:12, e:15, st:"todo", reqs:[], note:"ACS+UI/UX 공동"},
   {track:"ACS", name:"PLC→Pallet 입고 이벤트 → 로봇 자동 배차", id:"A-10", s:13, e:15, st:"todo", reqs:["2.5"]},
   {track:"ACS", name:"2대 트래픽 컨트롤 기초 (충돌 회피)", id:"A-11", s:14, e:15, st:"todo", reqs:["1001.1","4.2","18.1"]},
@@ -114,7 +115,8 @@ const tasks = [
   {track:"UI", name:"PLC TAG 수정/그룹핑/리스트/실시간 필터링 UI", id:"U-05", s:12, e:17, st:"todo", reqs:["23.1","23.2","23.3"]},
 
   {track:"UI", cat:"UI·UX — 로봇·미션 화면 (4~6월)"},
-  {track:"UI", name:"로봇 상태 실시간 대시보드", id:"U-06", s:12, e:17, st:"todo", reqs:["1006.1","1.15","1.4","1004.1","1004.2"]},
+  {track:"UI", name:"로봇 상태 실시간 대시보드", id:"U-06", s:12, e:17, st:"todo", reqs:["1006.1","1.15","1.4"]},
+  {track:"UI", name:"Sleep Schedule 관리 UI / Sleep·Wakeup UI", id:"U-06b", s:13, e:14, st:"todo", reqs:["1004.1","1004.2"]},
   {track:"UI", name:"미션 관리 UI (생성/할당/모니터링)", id:"U-07", s:14, e:19, st:"todo", reqs:["2.1","2.3","2.4","2.7","2.8","2.7b"]},
   {track:"UI", name:"로봇 수동제어 / 수동미션 / 위치설정 UI", id:"U-08", s:18, e:23, st:"todo", reqs:["1.12","1.13","1.14"]},
   {track:"UI", name:"ETA 미션 진척률 표시 UI", id:"U-09", s:18, e:23, st:"todo", reqs:[]},
@@ -213,9 +215,9 @@ const milestones = [
     { track:"기획", text:"요구사항 정의 · DB ERD 설계", reqs:"" },
   ]},
   { week: 15, label: "[단일 로봇] 미션 할당 + PLC 연동", subs: [
-    { track:"ACS", text:"단일 미션 할당 · PLC 연동 미션 · VDA5050 프로토콜 완료", reqs:"2.1, 2.5, 2.6, 20.1, 1001.1, 4.2, 18.1" },
+    { track:"ACS", text:"단일 미션 할당 · PLC 연동 미션 · VDA5050 프로토콜 완료 · Sleep Schedule 관리/Wakeup 기능", reqs:"2.1, 2.5, 2.6, 20.1, 1001.1, 4.2, 18.1, 1004.1, 1004.2" },
     { track:"PLC", text:"OPC-UA SW 시뮬레이션 150대 검증", reqs:"6.1, 6.2, 23.2, 23.3, 1003.2" },
-    { track:"UI", text:"맵 편집기 완성 · PLC 객체 관리 UI", reqs:"5.7, 5.8, 5.9, 1003.2, 1003.3" },
+    { track:"UI", text:"맵 편집기 완성 · PLC 객체 관리 UI · Sleep Schedule UI", reqs:"5.7, 5.8, 5.9, 1003.2, 1003.3, 1004.1, 1004.2" },
     { track:"기획", text:"화면 설계 (IA/Wireframe) 1차 완료", reqs:"" },
   ]},
   { week: 19, label: "[멀티 로봇] 경로 계획 + 충돌 회피", subs: [
