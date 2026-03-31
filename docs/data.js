@@ -111,7 +111,7 @@ const tasks = [
   {track:"UI", name:"노드/엣지/Zone 특성 관리", id:"U-02", s:7, e:15, st:"todo", reqs:["5.7","5.8","5.9"]},
   {track:"UI", name:"로봇 객체 추가/그룹 관리 UI", id:"U-03", s:7, e:11, st:"progress", reqs:["1.1","1.2","1003.1","1003.3"]},
   {track:"UI", name:"PLC 객체 DB 생성 및 관리 UI", id:"U-04", s:10, e:15, st:"todo", reqs:["1003.2","1003.3"]},
-  {track:"UI", name:"Pallet 객체 DB 및 관리", id:"U-04b", s:12, e:15, st:"todo", reqs:["1003.3"]},
+  {track:"UI", name:"Pallet 객체 DB 및 관리", id:"U-04b", s:17, e:20, st:"todo", reqs:["1003.3"]},
   {track:"UI", name:"PLC TAG 수정/그룹핑/리스트/실시간 필터링 UI", id:"U-05", s:12, e:17, st:"todo", reqs:["23.1","23.2","23.3"]},
 
   {track:"UI", cat:"UI·UX — 로봇·미션 화면 (4~6월)"},
@@ -253,8 +253,23 @@ const milestones = [
 ];
 
 // ============================================================
+// 최근 변경사항 (changelog)
+// ============================================================
+const changelog = [
+  { date:"2026-03-31", entries:[
+    "Sleep Schedule 태스크 추가 — ACS A-08b (W12~W13), UI U-06b (W13~W14)",
+    "마일스톤 W15에 Sleep Schedule 반영 (ACS, UI 트랙)",
+    "A-09 Pallet 객체 DB → UI 트랙으로 이동 (U-04b)",
+    "U-04b 일정 변경: W12→W17 (5월 시작)",
+  ]},
+  { date:"2026-03-27", entries:[
+    "HACS2.0_data.json 업데이트 (export 2026-03-27)",
+  ]},
+];
+
+// ============================================================
 // Node.js 호환 (require()로 불러오기 가능)
 // ============================================================
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { tasks, items, milestones, todayWeek, months, totalWeeks, COLORS, checkpoints, ALL_REQ_IDS, REQ_NAMES };
+  module.exports = { tasks, items, milestones, todayWeek, months, totalWeeks, COLORS, checkpoints, ALL_REQ_IDS, REQ_NAMES, changelog };
 }

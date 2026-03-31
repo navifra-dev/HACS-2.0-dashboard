@@ -112,6 +112,44 @@
     margin-bottom: 20px;
   }
 
+  /* 최근 변경사항 */
+  .changelog {
+    margin-top: 32px;
+    max-width: 960px;
+  }
+  .changelog-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1A2744;
+    margin-bottom: 14px;
+  }
+  .changelog-group {
+    margin-bottom: 16px;
+  }
+  .changelog-date {
+    font-size: 12px;
+    font-weight: 600;
+    color: #2563EB;
+    background: #EBF3FE;
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .changelog-entry {
+    font-size: 13px;
+    color: #475569;
+    padding: 4px 0 4px 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .changelog-entry::before {
+    content: "•";
+    position: absolute;
+    left: 4px;
+    color: #94A3B8;
+  }
+
   /* 비밀번호 모달 */
   .pw-overlay {
     display: none; position: fixed; inset: 0;

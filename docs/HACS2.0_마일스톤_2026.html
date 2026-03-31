@@ -172,6 +172,15 @@
 <script src="html2canvas.min.js"></script>
 <script src="jspdf.umd.min.js"></script>
 <script src="xlsx.full.min.js"></script>
+<style>
+  /* 최근 변경사항 */
+  .changelog { margin: 24px 40px; padding: 20px 24px; background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .changelog-title { font-size: 15px; font-weight: 700; color: #2B3990; margin-bottom: 14px; }
+  .changelog-group { margin-bottom: 12px; }
+  .changelog-date { font-size: 11px; font-weight: 600; color: #3D4FA6; background: #EBEFFE; display: inline-block; padding: 2px 10px; border-radius: 4px; margin-bottom: 6px; }
+  .changelog-entry { font-size: 12px; color: #555; padding: 3px 0 3px 16px; position: relative; line-height: 1.5; }
+  .changelog-entry::before { content: "•"; position: absolute; left: 4px; color: #aaa; }
+</style>
 <script src="data.js"></script>
 </head>
 <body>
@@ -180,6 +189,8 @@
   <h1>H-ACS 2.0 개발 마일스톤 (세분화)</h1>
   <div class="sub">2026년 연간 일정 &middot; VDA5050 네이티브 &middot; 월별 로봇 확장: 1대→2대→5대→20대→50대→실로봇→OLT &middot; 최종 업데이트: 3월 7일</div>
 </div>
+
+<div class="changelog" id="changelogArea"></div>
 
 <div class="controls">
   <button class="filter-btn active" onclick="filterTrack('all')">전체</button>
@@ -1132,6 +1143,23 @@ function exportXLSX() {
     btn.disabled = false;
   }
 }
+</script>
+
+<script>
+(function() {
+  const area = document.getElementById("changelogArea");
+  if (typeof changelog === "undefined" || !changelog.length) return;
+  let html = '<div class="changelog-title">📋 최근 변경사항</div>';
+  changelog.forEach(g => {
+    html += '<div class="changelog-group">';
+    html += '<div class="changelog-date">' + g.date + '</div>';
+    g.entries.forEach(e => {
+      html += '<div class="changelog-entry">' + e + '</div>';
+    });
+    html += '</div>';
+  });
+  area.innerHTML = html;
+})();
 </script>
 </body>
 </html>
