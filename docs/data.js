@@ -80,7 +80,6 @@ const tasks = [
   {track:"ACS", name:"버퍼 미션 생성 로직", id:"A-07b", s:13, e:15, st:"todo", reqs:["20.1"]},
   {track:"ACS", name:"로봇 접속/상태 관리 (VDA5050 기반)", id:"A-08", s:12, e:15, st:"todo", reqs:["1.3","1.4","21.1","1006.1"]},
   {track:"ACS", name:"Sleep Schedule 관리 / Sleep·Wakeup 기능", id:"A-08b", s:12, e:13, st:"todo", reqs:["1004.1","1004.2"]},
-  {track:"ACS", name:"Pallet 객체 DB 및 관리", id:"A-09", s:12, e:15, st:"todo", reqs:[], note:"ACS+UI/UX 공동"},
   {track:"ACS", name:"PLC→Pallet 입고 이벤트 → 로봇 자동 배차", id:"A-10", s:13, e:15, st:"todo", reqs:["2.5"]},
   {track:"ACS", name:"2대 트래픽 컨트롤 기초 (충돌 회피)", id:"A-11", s:14, e:15, st:"todo", reqs:["1001.1","4.2","18.1"]},
 
@@ -112,6 +111,7 @@ const tasks = [
   {track:"UI", name:"노드/엣지/Zone 특성 관리", id:"U-02", s:7, e:15, st:"todo", reqs:["5.7","5.8","5.9"]},
   {track:"UI", name:"로봇 객체 추가/그룹 관리 UI", id:"U-03", s:7, e:11, st:"progress", reqs:["1.1","1.2","1003.1","1003.3"]},
   {track:"UI", name:"PLC 객체 DB 생성 및 관리 UI", id:"U-04", s:10, e:15, st:"todo", reqs:["1003.2","1003.3"]},
+  {track:"UI", name:"Pallet 객체 DB 및 관리", id:"U-04b", s:12, e:15, st:"todo", reqs:["1003.3"]},
   {track:"UI", name:"PLC TAG 수정/그룹핑/리스트/실시간 필터링 UI", id:"U-05", s:12, e:17, st:"todo", reqs:["23.1","23.2","23.3"]},
 
   {track:"UI", cat:"UI·UX — 로봇·미션 화면 (4~6월)"},
