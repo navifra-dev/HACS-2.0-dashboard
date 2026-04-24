@@ -59,7 +59,7 @@ const tasks = [
   {track:"기획", cat:"기획 및 화면 설계"},
   {track:"기획", name:"요구사항 정의 및 문서화", id:"P-01", s:0, e:5, st:"done", reqs:[]},
   {track:"기획", name:"데이터 모델링 및 DB 설계 (ERD)", id:"P-03", s:4, e:10, st:"progress", reqs:[]},
-  {track:"기획", name:"화면 설계 (IA/Wireframe/UI Spec)", id:"P-08", s:6, e:15, st:"progress", reqs:[]},
+  {track:"기획", name:"화면 설계 (IA/Wireframe/UI Spec)", id:"P-08", s:6, e:21, st:"progress", reqs:[]},
 
   // ===== ACS 트랙 =====
   {track:"ACS", cat:"ACS — 1대 VDA5050 시뮬레이션 주행 (Verification Toolkit 사용)"},
@@ -79,7 +79,7 @@ const tasks = [
   {track:"ACS", name:"미션 추가/관리 기능", id:"A-07", s:12, e:15, st:"todo", reqs:["2.1","2.3","2.4"]},
   {track:"ACS", name:"버퍼 미션 생성 로직", id:"A-07b", s:13, e:15, st:"todo", reqs:["20.1"]},
   {track:"ACS", name:"로봇 접속/상태 관리 (VDA5050 기반)", id:"A-08", s:12, e:15, st:"todo", reqs:["1.3","1.4","21.1","1006.1"]},
-  {track:"ACS", name:"Sleep Schedule 관리 / Sleep·Wakeup 기능", id:"A-08b", s:12, e:13, st:"todo", reqs:["1004.1","1004.2"]},
+  {track:"ACS", name:"Sleep Schedule 관리 / Sleep·Wakeup 기능", id:"A-08b", s:18, e:19, st:"todo", reqs:["1004.1","1004.2"]},
   {track:"ACS", name:"PLC→Pallet 입고 이벤트 → 로봇 자동 배차", id:"A-10", s:13, e:15, st:"todo", reqs:["2.5"]},
   {track:"ACS", name:"2대 트래픽 컨트롤 기초 (충돌 회피)", id:"A-11", s:14, e:15, st:"todo", reqs:["1001.1","4.2","18.1"]},
 
@@ -116,7 +116,7 @@ const tasks = [
 
   {track:"UI", cat:"UI·UX — 로봇·미션 화면 (4~6월)"},
   {track:"UI", name:"로봇 상태 실시간 대시보드", id:"U-06", s:12, e:17, st:"todo", reqs:["1006.1","1.15","1.4"]},
-  {track:"UI", name:"Sleep Schedule 관리 UI / Sleep·Wakeup UI", id:"U-06b", s:13, e:14, st:"todo", reqs:["1004.1","1004.2"]},
+  {track:"UI", name:"Sleep Schedule 관리 UI / Sleep·Wakeup UI", id:"U-06b", s:18, e:19, st:"todo", reqs:["1004.1","1004.2"]},
   {track:"UI", name:"미션 관리 UI (생성/할당/모니터링)", id:"U-07", s:14, e:19, st:"todo", reqs:["2.1","2.3","2.4","2.7","2.8","2.7b"]},
   {track:"UI", name:"로봇 수동제어 / 수동미션 / 위치설정 UI", id:"U-08", s:18, e:23, st:"todo", reqs:["1.12","1.13","1.14"]},
   {track:"UI", name:"ETA 미션 진척률 표시 UI", id:"U-09", s:18, e:23, st:"todo", reqs:[]},
@@ -193,7 +193,7 @@ const tasks = [
 // ============================================================
 const items = [
   { track:"기획", name:"기획 및 화면 설계", s:0, e:13, robot:"" },
-  { track:"기획", name:"화면 설계 (IA/Wireframe/UI Spec)", s:6, e:15, robot:"" },
+  { track:"기획", name:"화면 설계 (IA/Wireframe/UI Spec)", s:6, e:21, robot:"" },
   { track:"ACS", name:"VDA5050 시뮬레이션 주행 (Verification Toolkit 사용)", s:6, e:11, robot:"단일" },
   { track:"ACS", name:"미션 할당 + PLC 연동", s:12, e:15, robot:"단일" },
   { track:"ACS", name:"경로 계획 + 충돌 회피 + ETA", s:16, e:19, robot:"멀티" },
@@ -224,10 +224,9 @@ const milestones = [
     { track:"기획", text:"요구사항 정의 · DB ERD 설계", reqs:"" },
   ]},
   { week: 15, label: "[단일 로봇] 미션 할당 + PLC 연동", subs: [
-    { track:"ACS", text:"단일 미션 할당 · PLC 연동 미션 · VDA5050 프로토콜 완료 · Sleep Schedule 관리/Wakeup 기능", reqs:"2.1, 2.5, 2.6, 20.1, 1001.1, 4.2, 18.1, 1004.1, 1004.2" },
+    { track:"ACS", text:"단일 미션 할당 · PLC 연동 미션 · VDA5050 프로토콜 완료", reqs:"2.1, 2.5, 2.6, 20.1, 1001.1, 4.2, 18.1" },
     { track:"PLC", text:"OPC-UA SW 시뮬레이션 150대 검증", reqs:"6.1, 6.2, 23.2, 23.3, 1003.2" },
-    { track:"UI", text:"맵 편집기 완성 · PLC 객체 관리 UI · Sleep Schedule UI", reqs:"5.7, 5.8, 5.9, 1003.2, 1003.3, 1004.1, 1004.2" },
-    { track:"기획", text:"화면 설계 (IA/Wireframe) 1차 완료", reqs:"" },
+    { track:"UI", text:"맵 편집기 완성 · PLC 객체 관리 UI", reqs:"5.7, 5.8, 5.9, 1003.2, 1003.3" },
   ]},
   { week: 15, label: "⭐ [중요] 5/1 개발 완료 데드라인 + 6개 서버 통합 시뮬레이션 개시", subs: [
     { track:"통합", text:"5/1까지 middleware, ros2core, hacs, v2io, v2v, care 서버 개발 완료 · 5월부터 6개 서버 모두 시뮬레이션 띄워 통합 테스트 개시", reqs:"" },
@@ -236,9 +235,10 @@ const milestones = [
     { track:"통합", text:"middleware · ros2core · hacs · v2io · v2v · care 6개 서버 시뮬레이션 테스트 1차 완료", reqs:"" },
   ]},
   { week: 19, label: "[멀티 로봇] 경로 계획 + 충돌 회피", subs: [
-    { track:"ACS", text:"멀티 동시 주행 · 다중 경로 계획 · 충돌 회피 · ETA 추정", reqs:"4.1, 4.6~4.9, 19.1, 22.1, 24.1~24.7" },
+    { track:"ACS", text:"멀티 동시 주행 · 다중 경로 계획 · 충돌 회피 · ETA 추정 · Sleep Schedule 관리/Wakeup 기능 (5월 중순)", reqs:"4.1, 4.6~4.9, 19.1, 22.1, 24.1~24.7, 1004.1, 1004.2" },
     { track:"PLC", text:"TAG 그룹핑 · 인터락 조건 · Polling vs Pub/Sub 성능 검증", reqs:"23.1, 6.2" },
-    { track:"UI", text:"로봇·미션 실시간 대시보드 · 미션 생성/관리", reqs:"1006.1, 1004.1, 1004.2, 2.1, 2.3, 5.10" },
+    { track:"UI", text:"로봇·미션 실시간 대시보드 · 미션 생성/관리 · Sleep Schedule UI (5월 중순)", reqs:"1006.1, 1004.1, 1004.2, 2.1, 2.3, 5.10" },
+    { track:"기획", text:"화면 설계 (IA/Wireframe) 1차 완료 (5월 말, W21)", reqs:"" },
   ]},
   { week: 23, label: "[멀티 로봇] 운영 데모", subs: [
     { track:"ACS", text:"트래픽 확장 · 수동제어 · 자동충전 · ETA 학습", reqs:"1002.1, 1002.3~1002.6, 7.1, 7.2" },
@@ -271,6 +271,13 @@ const milestones = [
 // 최근 변경사항 (changelog)
 // ============================================================
 const changelog = [
+  { date:"2026-04-24", entries:[
+    "📅 화면 설계 (P-08) 일정 연장: W15 → W21 (5월 말로 1차 완료 이동)",
+    "📅 Sleep Schedule (A-08b) 일정 이동: W12~W13 → W18~W19 (5월 중순)",
+    "📅 Sleep Schedule UI (U-06b) 일정 이동: W13~W14 → W18~W19 (5월 중순)",
+    "W15 마일스톤에서 'Sleep Schedule 관리/Wakeup', 'Sleep Schedule UI', '화면 설계 1차 완료' 제거",
+    "W19 [멀티 로봇] 마일스톤에 Sleep Schedule(5월 중순) · 화면 설계 1차 완료(5월 말) 이동 반영",
+  ]},
   { date:"2026-04-10", entries:[
     "⭐ [중요] 5/1 개발 완료 마일스톤 추가 (W15)",
     "6개 서버(middleware, ros2core, hacs, v2io, v2v, care) 5월 통합 시뮬레이션 테스트 태스크 추가 (W16~W19)",
