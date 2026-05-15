@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>H-ACS 2.0 프로젝트 로드맵</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; background: #fff; color: #333; }
+
+  .header { background: linear-gradient(135deg, #2B3990 0%, #3D4FA6 100%); color: #fff; padding: 36px 48px 28px; }
+  .header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+  .header .sub { font-size: 14px; color: #8B9AD8; margin-top: 8px; }
+  .header .date { font-size: 11px; color: #8B9AD8; margin-top: 6px; }
+
+  .main { padding: 32px 48px; }
+
+  /* 상단 요약 카드 */
+  .summary { display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+  .s-card { flex: 1; min-width: 130px; background: #f8fafc; border-radius: 10px; padding: 16px 18px; border-left: 4px solid; }
+  .s-card .month { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .s-card .desc { font-size: 11px; color: #555; line-height: 1.6; }
+
+  /* 간트 */
+  .gantt-area { overflow-x: auto; margin-bottom: 32px; }
+  .gantt { border-collapse: collapse; width: 100%; min-width: 900px; }
+  .gantt th { padding: 0; text-align: center; font-size: 12px; }
+  .gantt td { padding: 0; }
+
+  .gantt thead tr:first-child th { background: #2B3990; color: #fff; font-size: 13px; font-weight: 600; padding: 12px 0; border-right: 1px solid #2d5a8a; }
+  .gantt thead tr:nth-child(2) th { background: #edf2f7; color: #666; font-size: 10px; padding: 5px 0; border-right: 1px solid #d0d8e0; border-bottom: 2px solid #2B3990; }
+  .gantt thead tr:nth-child(2) th.today { background: #fff3e0; color: #4A5BC7; font-weight: 700; }
+
+  .item-name { text-align: left !important; padding: 10px 16px 10px 32px !important; white-space: nowrap; font-size: 12.5px; font-weight: 600; border-bottom: 1px solid #eee; min-width: 420px; position: sticky; left: 0; background: #fff; z-index: 2; }
+  .item-name .track-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; color: #fff; margin-right: 6px; }
+  .item-name .robot { color: #4A5BC7; font-size: 11px; font-weight: 700; margin-left: 4px; }
+  .item-name .reqs { display: inline-block; font-size: 9.5px; color: #6a7494; font-weight: 600; margin-left: 8px; padding: 1px 7px; background: #eef2f7; border: 1px solid #dde3ed; border-radius: 6px; font-family: 'Consolas','Courier New',monospace; letter-spacing: .2px; }
+  .item-name .hold-badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; background: #fff3e0; color: #e65100; margin-left: 6px; border: 1px solid #ffcc80; }
+  .item-name .pct-badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 10.5px; font-weight: 700; margin-left: 8px; min-width: 38px; text-align: center; }
+  .pct-done { background: #2e7d32; color: #fff; }
+  .pct-high { background: #c8e6c9; color: #1b5e20; }
+  .pct-mid { background: #fff3e0; color: #e65100; }
+  .pct-low { background: #f5f5f5; color: #888; }
+  .pct-zero { background: #fafafa; color: #b0b0b0; border: 1px dashed #ddd; }
+
+  /* 카테고리 그룹 헤더 행 */
+  .cat-row td { background: linear-gradient(to right, #e3eafc, #eef2fb 50%, #f5f7fc); padding: 9px 16px !important; border-top: 1px solid #c5cee0; border-bottom: 2px solid #5A6BC4; }
+  .cat-row .cat-header-name { position: sticky; left: 0; z-index: 3; background: linear-gradient(to right, #e3eafc, #eef2fb); min-width: 420px; }
+  .cat-row .cat-header-name .cat-icon { font-size: 15px; margin-right: 8px; }
+  .cat-row .cat-header-name .cat-title { font-size: 13px; font-weight: 800; color: #1E2A78; letter-spacing: -.2px; }
+  .cat-row .cat-header-name .cat-count { font-size: 10.5px; color: #6a7494; margin-left: 8px; font-weight: 600; }
+  .cat-row .cat-header-blank { font-size: 11px; color: #5A6BC4; text-align: right; padding-right: 18px !important; font-weight: 700; }
+  .cat-row .cat-avg-bar { display: inline-block; width: 80px; height: 6px; background: rgba(255,255,255,.6); border-radius: 3px; overflow: hidden; vertical-align: middle; margin-left: 8px; }
+  .cat-row .cat-avg-fill { height: 100%; background: #5A6BC4; border-radius: 3px; }
+
+  .week-cell { width: 28px; min-width: 28px; max-width: 28px; border-right: 1px solid #f0f0f0; border-bottom: 1px solid #eee; position: relative; height: 44px; }
+  .week-cell.bar { border-radius: 0; }
+  .week-cell.bar-s { border-radius: 6px 0 0 6px; }
+  .week-cell.bar-e { border-radius: 0 6px 6px 0; }
+  .week-cell.bar-se { border-radius: 6px; }
+  .week-cell.today-line { border-left: 3px solid #ff5722 !important; }
+  .q-border { border-right: 2px solid #ccd6e0 !important; }
+
+  /* 마일스톤 다이아몬드 */
+  .ms-diamond { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(45deg); width: 12px; height: 12px; background: #2B3990; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); z-index: 1; }
+
+  .legend { display: flex; gap: 24px; padding: 16px 0; font-size: 12px; color: #666; flex-wrap: wrap; border-top: 1px solid #eee; margin-top: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-color { width: 24px; height: 10px; border-radius: 3px; }
+  .legend-diamond { width: 10px; height: 10px; background: #2B3990; transform: rotate(45deg); }
+
+  /* 하단 체크포인트 */
+  .milestones-section { margin-top: 24px; }
+  .milestones-section h3 { font-size: 15px; font-weight: 700; color: #2B3990; margin-bottom: 16px; }
+  .ms-timeline { position: relative; padding-left: 24px; }
+  .ms-timeline::before { content: ""; position: absolute; left: 8px; top: 0; bottom: 0; width: 3px; background: linear-gradient(to bottom, #3D4FA6, #5A6BC4, #4A5BC7, #1E2A78); border-radius: 2px; }
+  .ms-item { position: relative; padding: 12px 0 20px 20px; }
+  .ms-item::before { content: ""; position: absolute; left: -20px; top: 16px; width: 14px; height: 14px; background: #fff; border: 3px solid #3D4FA6; border-radius: 50%; z-index: 1; }
+  .ms-item.active::before { background: #3D4FA6; }
+  .ms-item.milestone::before { border-color: #2B3990; background: #2B3990; }
+  .ms-item .ms-time { font-size: 11px; color: #888; font-weight: 600; }
+  .ms-item .ms-title { font-size: 14px; font-weight: 700; color: #2B3990; margin: 4px 0; }
+  .ms-item .ms-desc { font-size: 12px; color: #555; line-height: 1.6; margin-top: 8px; }
+  /* 현재(가장 임박한) 마일스톤 강조 */
+  .ms-item.current { background: linear-gradient(to right, #fff3e0, transparent 70%); border-radius: 0 8px 8px 0; padding: 12px 16px 20px 24px; margin-left: -10px; }
+  .ms-item.current::before { background: #ff5722 !important; border-color: #ff5722 !important; width: 16px !important; height: 16px !important; left: -22px !important; box-shadow: 0 0 0 4px rgba(255,87,34,.25); }
+  .ms-item.current .ms-title { color: #d84315; font-weight: 800; font-size: 15px; }
+  .ms-item.current .ms-time { color: #ff5722; font-weight: 700; }
+  .ms-item.current .ms-time::after { content: " — 이번 주!"; font-weight: 800; }
+  .ms-cat { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 4px; }
+  .ms-cat-tag { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; color: #fff; white-space: nowrap; min-width: 42px; text-align: center; flex-shrink: 0; margin-top: 1px; }
+  .ms-cat-text { font-size: 12px; color: #555; line-height: 1.5; }
+  .ms-reqs { font-size: 10px; color: #999; margin-left: 2px; }
+
+  /* 상단 KPI 카드 */
+  .kpi-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .kpi-card { background: #fff; border: 1px solid #e0e6f0; border-radius: 10px; padding: 14px 18px; flex: 1; min-width: 150px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .kpi-card .lbl { font-size: 11px; color: #888; margin-bottom: 6px; font-weight: 600; letter-spacing: -.2px; }
+  .kpi-card .val { font-size: 26px; font-weight: 800; color: #1E2A78; line-height: 1; letter-spacing: -.5px; }
+  .kpi-card .sub { font-size: 10.5px; color: #888; margin-top: 6px; line-height: 1.4; }
+  .kpi-card .bar { height: 5px; background: #e8ecf0; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+  .kpi-card .bar .fill { height: 100%; border-radius: 3px; transition: width .5s; }
+  .kpi-card.accent-blue { border-left: 4px solid #3D4FA6; }
+  .kpi-card.accent-orange { border-left: 4px solid #ff5722; }
+  .kpi-card.accent-green { border-left: 4px solid #2e7d32; }
+  .kpi-card.accent-gray { border-left: 4px solid #888; }
+
+  @media print {
+    .header { padding: 20px 24px; }
+    .main { padding: 16px 24px; }
+    body { font-size: 11px; }
+  }
+  .export-bar { display: flex; gap: 10px; padding: 12px 48px; background: #f8fafc; border-bottom: 1px solid #eee; }
+  .export-btn { padding: 8px 20px; border-radius: 8px; border: 1px solid #2B3990; background: #fff; color: #2B3990; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .2s; }
+  .export-btn:hover { background: #2B3990; color: #fff; }
+  .export-btn.primary { background: #2B3990; color: #fff; }
+  .export-btn.primary:hover { background: #1E2A78; }
+  @media print { .export-bar { display: none; } }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+<div class="export-bar">
+  <button class="export-btn primary" onclick="exportPNG('full')">📸 전체 PNG 내보내기</button>
+  <button class="export-btn" onclick="exportPNG('gantt')">📊 간트 차트만</button>
+  <button class="export-btn" onclick="exportPNG('milestones')">🏁 마일스톤만</button>
+</div>
+
+<div id="capture-full">
+<div class="header">
+  <h1>H-ACS 2.0 프로젝트 로드맵</h1>
+  <div class="sub">현대자동차그룹 H-ACS 2.0 개발 고도화 — 단계별 로봇 확장 계획</div>
+  <div class="date">2026년 3월 기준 · Navifra</div>
+</div>
+
+<div class="main">
+
+<!-- 전체 진척 KPI -->
+<div class="kpi-row" id="kpiRow"></div>
+
+<!-- 로봇 확장 요약 -->
+<div class="summary">
+  <div class="s-card" style="border-color:#3D4FA6">
+    <div class="month">3월</div>
+    <div class="desc">VDA5050 시뮬레이션 주행<br/>지도·경로·통신 기반 구축</div>
+  </div>
+  <div class="s-card" style="border-color:#3D4FA6">
+    <div class="month">4월</div>
+    <div class="desc">미션 할당 + PLC 연동<br/>Pallet 자동배차 시나리오</div>
+  </div>
+  <div class="s-card" style="border-color:#5A6BC4">
+    <div class="month">5월</div>
+    <div class="desc">다중 경로 계획 + 충돌 회피<br/>ETA 추정 · 미션 전략</div>
+  </div>
+  <div class="s-card" style="border-color:#4A5BC7">
+    <div class="month">6월</div>
+    <div class="desc">트래픽 확장 + 수동제어<br/>자동충전 · ETA 학습</div>
+  </div>
+  <div class="s-card" style="border-color:#4A5BC7">
+    <div class="month">7월</div>
+    <div class="desc">대규모 부하 테스트<br/>통합 관제 · 서버 안정성</div>
+  </div>
+  <div class="s-card" style="border-color:#1E2A78">
+    <div class="month">8월~</div>
+    <div class="desc">E2E 통합 테스트<br/>화성/울산 공장 OLT</div>
+  </div>
+</div>
+
+<!-- 간트 차트 -->
+<div id="capture-gantt">
+<div class="gantt-area">
+  <table class="gantt" id="gantt"></table>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-color" style="background:#2B3990"></div> ACS</div>
+  <div class="legend-item"><div class="legend-color" style="background:#5A6BC4"></div> UI·UX</div>
+  <div class="legend-item"><div class="legend-color" style="background:#4A5BC7"></div> H-PLC</div>
+  <div class="legend-item"><div class="legend-color" style="background:#1E2A78"></div> 통합·검증</div>
+  <div class="legend-item"><div class="legend-color" style="background:#8B9AD8"></div> 기획</div>
+  <div class="legend-item"><span style="display:inline-block;width:3px;height:14px;background:#ff5722;margin-right:2px"></span> 현재 (5/15 · W18)</div>
+</div>
+
+</div><!-- /capture-gantt -->
+
+<!-- 주요 마일스톤 타임라인 -->
+<div id="capture-milestones">
+<div class="milestones-section">
+  <h3>주요 마일스톤</h3>
+  <div class="ms-timeline" id="msTimeline"></div>
+</div>
+</div><!-- /capture-milestones -->
+
+</div><!-- /capture-full -->
+
+<script>
+const months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월"];
+const totalWeeks = 40;
+const todayWeek = 18; // 2026-05-15 (5월 3주차)
+const COLORS = { "기획":"#8B9AD8", "ACS":"#2B3990", "UI":"#5A6BC4", "PLC":"#4A5BC7", "통합":"#1E2A78" };
+
+// 카테고리 그룹 메타 (헤더 행에 사용) — items의 cat 키와 매칭
+const CATEGORIES = [
+  { key:"HPLC",     name:"H-PLC Link 플랫폼" },
+  { key:"트래픽",   name:"트래픽 제어" },
+  { key:"미션운영", name:"로봇 및 미션 운영" },
+  { key:"외부IF",   name:"외부 인터페이스" },
+  { key:"맵편집",   name:"맵 편집기" },
+  { key:"로봇IF",   name:"로봇 인터페이스" },
+  { key:"데이터",   name:"데이터 수집 및 분석" },
+  { key:"UI화면",   name:"UI 화면 기준" },
+  { key:"시스템",   name:"시스템 운영 (공통)" },
+  { key:"통합",     name:"통합 · 검증" },
+];
+
+// 모듈/기능 단위 상세 업무 항목 — pct: 진척률(0~100), reqs: 매핑된 요구사항 ID
+// "검토 중" / "불가능" 16개 항목 제외 후 85개 요구사항을 9개 카테고리에 매핑
+const items = [
+  // ===== HPLC Link 플랫폼 (PLC 트랙) =====
+  { track:"PLC", cat:"HPLC",    name:"PLC / TAG 등록 기능",                                   reqs:"1003.2",               s:14, e:18, robot:"", pct:100 },
+  { track:"PLC", cat:"HPLC",    name:"TAG 모니터링 (Polling / Event 하이브리드)",             reqs:"6.1, 23.2, 23.3",      s:15, e:20, robot:"", pct:50  },
+  { track:"PLC", cat:"HPLC",    name:"추상 / 물리 Tag 자동 맵핑",                             reqs:"-",                    s:20, e:25, robot:"", pct:0   },
+  { track:"PLC", cat:"HPLC",    name:"논리 / 가상 Tag 생성",                                  reqs:"23.1",                 s:15, e:20, robot:"", pct:0   },
+  { track:"PLC", cat:"HPLC",    name:"PLC Read / Write API",                                  reqs:"6.2",                  s:14, e:20, robot:"", pct:70  },
+  { track:"PLC", cat:"HPLC",    name:"실물 PLC 성능 테스트 (LS / 미쯔비시)",                  reqs:"-",                    s:16, e:29, robot:"", pct:30  },
+
+  // ===== 트래픽 제어 (ACS 트랙) =====
+  { track:"ACS", cat:"트래픽",  name:"경로 탐색 알고리즘",                                    reqs:"3.1",                  s:8,  e:16, robot:"단일", pct:100 },
+  { track:"ACS", cat:"트래픽",  name:"트래픽 제어 / 충돌 회피 로직",                          reqs:"1001.1, 1002.3, 4.1, 4.6, 4.7, 4.9, 18.1", s:12, e:23, robot:"멀티", pct:30 },
+  { track:"ACS", cat:"트래픽",  name:"V2Link 인터페이스",                                     reqs:"1002.4",               s:18, e:25, robot:"", pct:5  },
+  { track:"ACS", cat:"트래픽",  name:"고도화 (예측 / 적시 제어 · 속도 감응)",                 reqs:"1002.1, 1002.2, 4.2",  s:24, e:31, robot:"멀티", pct:10 },
+
+  // ===== 로봇 및 미션 운영 (ACS 트랙) =====
+  { track:"ACS", cat:"미션운영", name:"로봇 할당 및 유연 미션 스케줄링",                      reqs:"2.1, 2.5, 2.6, 2.7, 2.8, 4.8, 1.13", s:12, e:23, robot:"", pct:35 },
+  { track:"ACS", cat:"미션운영", name:"미션 이관 및 리라우팅 기능",                           reqs:"22.1, 19.1, 20.1",     s:20, e:27, robot:"", pct:0  },
+  { track:"ACS", cat:"미션운영", name:"우선순위 및 부하 분산 로직",                           reqs:"4.8",                  s:18, e:23, robot:"", pct:15 },
+  { track:"ACS", cat:"미션운영", name:"자동 충전 운영 로직",                                  reqs:"7.1",                  s:14, e:19, robot:"", pct:70 },
+  { track:"ACS", cat:"미션운영", name:"스케줄링 Sleep / Wakeup",                              reqs:"1004.1, 1004.2",       s:16, e:25, robot:"", pct:20 },
+
+  // ===== 외부 인터페이스 (ACS 트랙) =====
+  { track:"ACS", cat:"외부IF",  name:"상위 시스템 연동 (MES / LMO 등 작업지시 시스템)",       reqs:"-",                    s:18, e:25, robot:"", pct:0  },
+  { track:"ACS", cat:"외부IF",  name:"기타 장치 인터페이스 (엘베 / 자동문 등)",               reqs:"-",                    s:20, e:27, robot:"", pct:0  },
+  { track:"ACS", cat:"외부IF",  name:"관제 제공 API (통신/프로토콜/타입)",                    reqs:"9.1, 9.2, 9.3, 9.4, 9.5", s:8,  e:17, robot:"", pct:90 },
+
+  // ===== 맵 편집기 (UI 트랙) =====
+  { track:"UI",  cat:"맵편집",  name:"맵 편집 및 편의 특화 기능",                             reqs:"5.4, 5.6, 5.11, 5.12, 5.14, 5.15, 5.16, 11.2", s:4,  e:23, robot:"", pct:30 },
+  { track:"UI",  cat:"맵편집",  name:"노드 / 링크 / 존 등 맵 객체 특성 관리",                 reqs:"5.7, 5.8, 5.9",        s:10, e:17, robot:"", pct:100 },
+  { track:"UI",  cat:"맵편집",  name:"멀티맵 및 다층 관제 구조 지원",                         reqs:"5.17, 5.19, 16.1",     s:10, e:21, robot:"", pct:20 },
+
+  // ===== 로봇 인터페이스 (ACS 트랙) =====
+  { track:"ACS", cat:"로봇IF",  name:"VDA5050 명령 해석 및 상태 매핑",                        reqs:"1.1, 1.3, 1.5, 1.11",  s:6,  e:20, robot:"단일", pct:35 },
+  { track:"ACS", cat:"로봇IF",  name:"미들웨어 HMI 연동",                                     reqs:"-",                    s:20, e:27, robot:"", pct:0, hold:"협의 필요" },
+  { track:"ACS", cat:"로봇IF",  name:"OTA (FW 업데이트) 기능",                                reqs:"-",                    s:24, e:31, robot:"", pct:0  },
+
+  // ===== 데이터 수집 및 분석 (ACS 트랙) =====
+  { track:"ACS", cat:"데이터",  name:"관제·로봇 알람, 이력, BMS / PHM 데이터",                reqs:"1005.1, 14.1, 14.2, 14.3, 14.4", s:14, e:23, robot:"", pct:50 },
+  { track:"ACS", cat:"데이터",  name:"통계 / 리포트 기능 (가동률 / CT / SOC / 부하)",         reqs:"15.2, 15.3, 15.4",     s:18, e:23, robot:"", pct:15 },
+  { track:"ACS", cat:"데이터",  name:"Playback (로봇 / 미션 / PLC 이력 재현)",                reqs:"-",                    s:24, e:31, robot:"", pct:0  },
+
+  // ===== UI 화면 기준 (UI 트랙) =====
+  { track:"UI",  cat:"UI화면",  name:"계정 및 권한 관리",                                     reqs:"1007.1",               s:10, e:17, robot:"", pct:100 },
+  { track:"UI",  cat:"UI화면",  name:"팔레트 및 적재물 관리",                                 reqs:"1003.3",               s:20, e:27, robot:"", pct:0   },
+  { track:"UI",  cat:"UI화면",  name:"단일 로봇 (형상 / 알람 / 풋프린트 / 적재물 등)",        reqs:"1003.1, 1.2, 1.4, 1.12, 1.14", s:8,  e:21, robot:"", pct:30 },
+  { track:"UI",  cat:"UI화면",  name:"부가 정보 (속도 감응형 Predicted Point)",               reqs:"1002.1",               s:20, e:25, robot:"", pct:5   },
+  { track:"UI",  cat:"UI화면",  name:"로봇 상태 모니터링 (단일 / 전체)",                      reqs:"1.15, 1006.1",         s:10, e:21, robot:"", pct:80 },
+  { track:"UI",  cat:"UI화면",  name:"미션 진척 모니터링 (단일 / 전체)",                      reqs:"2.3, 2.4",             s:14, e:23, robot:"", pct:30  },
+  { track:"UI",  cat:"UI화면",  name:"트래픽 상태 모니터링",                                  reqs:"1002.5, 1002.6",       s:20, e:27, robot:"", pct:5   },
+  { track:"UI",  cat:"UI화면",  name:"인터락 모니터링 (로봇 HMI 연동)",                       reqs:"12.1",                 s:18, e:25, robot:"", pct:0, hold:"협의 필요" },
+  { track:"UI",  cat:"UI화면",  name:"알람 레벨 별 가시화 (정보 / 경고 / 에러 / 긴급)",       reqs:"1005.2, 21.1",         s:12, e:21, robot:"", pct:80  },
+
+  // ===== 시스템 운영 (공통) — 신규 카테고리 =====
+  { track:"ACS", cat:"시스템",  name:"HACS v2.0 아키텍처 (Agents / Services 구조)",           reqs:"1000.1, 1000.2",       s:1,  e:17, robot:"", pct:70  },
+  { track:"ACS", cat:"시스템",  name:"시스템 상태 관리 (Running / Paused / 비정상 종료 복구)", reqs:"8.1",                  s:6,  e:17, robot:"", pct:80 },
+  { track:"ACS", cat:"시스템",  name:"시스템 파라미터 관리 (Global / Robot 계층)",            reqs:"8.2",                  s:14, e:23, robot:"", pct:30  },
+  { track:"ACS", cat:"시스템",  name:"ACS Server 자동 실행 (Watcher 기반)",                   reqs:"13.1",                 s:4,  e:15, robot:"", pct:85 },
+  { track:"ACS", cat:"시스템",  name:"ACS Server 상태 모니터링 (Self-Healing)",               reqs:"13.2",                 s:4,  e:15, robot:"", pct:85 },
+
+  // ===== 통합·검증 =====
+  { track:"통합", cat:"통합",   name:"5월 시뮬레이션 — 6개 서버 통합 (m/w·ros2core·hacs·v2io·v2v·care)", reqs:"-", s:16, e:19, robot:"시뮬", pct:50 },
+  { track:"통합", cat:"통합",   name:"실 로봇 연계 + E2E 통합",                               reqs:"-",                    s:24, e:31, robot:"실 로봇", pct:0 },
+  { track:"통합", cat:"통합",   name:"천안·아산 공장 현장 적용 (OLT)",                        reqs:"-",                    s:32, e:39, robot:"현장",   pct:0 },
+  { track:"통합", cat:"통합",   name:"화성 공장 현장 적용 (OLT)",                             reqs:"-",                    s:32, e:39, robot:"현장",   pct:0 },
+  { track:"통합", cat:"통합",   name:"울산 공장 현장 적용 (OLT)",                             reqs:"-",                    s:32, e:39, robot:"현장",   pct:0 },
+];
+
+// 마일스톤 포인트 (주요 체크포인트) — 카테고리별 하위 내용 + 요구사항 ID
+const milestones = [
+  { week: 11, label: "[단일 로봇] 시뮬레이션 주행", subs: [
+    { track:"ACS", text:"VDA5050 단일 주행 시연 · 아키텍처 설계 · SDD · 개발환경 구축", reqs:"1.1, 1.3, 1.4, 1.5, 1.11, 3.1, 9.1~9.5, 1000.1, 1000.2, 1002.2" },
+    { track:"UI", text:"맵 편집기 MVP (노드·엣지 배치, 저장/불러오기)", reqs:"5.4, 5.6, 5.11, 1.1, 1.2" },
+    { track:"PLC", text:"H-PLC 아키텍처 설계 · 가상 PLC 환경 구축", reqs:"6.1, 6.2" },
+    { track:"기획", text:"요구사항 정의 · DB ERD 설계", reqs:"" },
+  ]},
+  { week: 15, label: "[단일 로봇] 미션 할당 + PLC 연동", subs: [
+    { track:"ACS", text:"단일 미션 할당 · PLC 연동 미션 · VDA5050 프로토콜 완료", reqs:"2.1, 2.5, 2.6, 20.1, 1001.1, 4.2, 18.1" },
+    { track:"PLC", text:"OPC UA 연결 · TAG 수집 기초 · PLC 객체 API", reqs:"6.1, 6.2, 23.2, 23.3, 1003.2" },
+    { track:"UI", text:"맵 편집기 완성 · PLC 객체 관리 UI", reqs:"5.7, 5.8, 5.9, 1003.2, 1003.3" },
+    { track:"기획", text:"화면 설계 (IA/Wireframe) 1차 완료", reqs:"" },
+  ]},
+  { week: 19, label: "[5월 시뮬레이션] 6개 서버 통합 시뮬레이션 테스트 완료", subs: [
+    { track:"통합", text:"middleware · ros2core · hacs · v2io · v2v · care 6개 서버 시뮬레이션 테스트 1차 완료", reqs:"" },
+  ]},
+  { week: 19, label: "[멀티 로봇] 경로 계획 + 충돌 회피", subs: [
+    { track:"ACS", text:"멀티 동시 주행 · 다중 경로 계획 · 충돌 회피 · ETA 추정", reqs:"4.1, 4.6~4.9, 19.1, 22.1, 24.1~24.7" },
+    { track:"PLC", text:"TAG 그룹핑 · 인터락 조건 · Polling vs Pub/Sub 성능 검증", reqs:"23.1, 6.2" },
+    { track:"UI", text:"로봇·미션 실시간 대시보드 · 미션 생성/관리", reqs:"1006.1, 1004.1, 1004.2, 2.1, 2.3, 5.10" },
+  ]},
+  { week: 23, label: "[멀티 로봇] 운영 데모", subs: [
+    { track:"ACS", text:"트래픽 확장 · 수동제어 · 자동충전 · ETA 학습", reqs:"1002.1, 1002.3~1002.6, 7.1, 7.2" },
+    { track:"PLC", text:"150 PLC 동시 접속 · 1,500 TAG 분산 Reading · Failover", reqs:"6.2, 23.1, 23.2, 23.3" },
+    { track:"UI", text:"고급 맵 편집 · 관제 화면 · 수동제어 UI", reqs:"1.12~1.14, 5.12~5.16, 11.1, 11.2, 12.1" },
+  ]},
+  { week: 27, label: "[멀티 로봇] 부하 테스트 완료", subs: [
+    { track:"ACS", text:"멀티 트래픽 최적화 · 서버 안정성 · 부하 테스트 보고서", reqs:"4.1, 13.1, 13.2, 1005.1, 1005.2, 15.1" },
+    { track:"PLC", text:"H-PLC 다중 인스턴스 · 단일 서버 통합 · Write 기능", reqs:"6.1, 1003.2" },
+    { track:"UI", text:"Playback · 통계/차트 · Alarm 모니터링 · 부가 기능 완성", reqs:"15.1~15.4, 14.1a~14.4, 16.1, 1005.1" },
+  ]},
+  { week: 33, label: "실 로봇 E2E 테스트", subs: [
+    { track:"ACS", text:"VDA5050 실 로봇 통신 검증", reqs:"" },
+    { track:"PLC", text:"실 PLC 장비 연동 검증", reqs:"" },
+    { track:"UI", text:"전체 UI 통합 테스트", reqs:"" },
+    { track:"통합", text:"ACS↔UI↔PLC 전체 연계 E2E 시나리오 검증", reqs:"" },
+  ]},
+  { week: 39, label: "천안·아산 / 화성 / 울산 공장 OLT 완료", subs: [
+    { track:"통합", text:"3개 공장(천안·아산 · 화성 · 울산) 현장 환경 배포 · 운영 테스트 · 최종 검수 보고서", reqs:"" },
+  ]},
+];
+
+function weekToLabel(w) {
+  const m = Math.floor(w / 4);
+  const wk = (w % 4) + 1;
+  return `${months[m] || (m+1)+"월"} ${wk}주`;
+}
+
+function renderKPI() {
+  let total = 0, sum = 0, done = 0, prog = 0, todo = 0, hold = 0;
+  items.forEach(it => {
+    total++;
+    sum += (it.pct || 0);
+    if ((it.pct || 0) >= 100) done++;
+    else if ((it.pct || 0) > 0) prog++;
+    else todo++;
+    if (it.hold) hold++;
+  });
+  const avg = total ? Math.round(sum / total * 10) / 10 : 0;
+  const expected = Math.round(todayWeek / totalWeeks * 100);
+  const delta = (avg - expected).toFixed(1);
+  const deltaSign = delta >= 0 ? '+' : '';
+  const deltaColor = delta >= 0 ? '#2e7d32' : '#e65100';
+  const avgBarColor = avg >= expected ? '#2e7d32' : '#3D4FA6';
+
+  const kpi = document.getElementById('kpiRow');
+  if (!kpi) return;
+  kpi.innerHTML = `
+    <div class="kpi-card accent-blue">
+      <div class="lbl">전체 진척률</div>
+      <div class="val">${avg}%</div>
+      <div class="bar"><div class="fill" style="width:${avg}%; background:${avgBarColor}"></div></div>
+      <div class="sub">${total}개 항목 · 가중 평균</div>
+    </div>
+    <div class="kpi-card accent-orange">
+      <div class="lbl">계획 대비 편차</div>
+      <div class="val" style="color:${deltaColor}">${deltaSign}${delta}<span style="font-size:14px">%p</span></div>
+      <div class="bar"><div class="fill" style="width:${expected}%; background:#ff9800"></div></div>
+      <div class="sub">계획 기대치 ${expected}% (W${todayWeek}/${totalWeeks})</div>
+    </div>
+    <div class="kpi-card accent-green">
+      <div class="lbl">완료 항목</div>
+      <div class="val" style="color:#2e7d32">${done}</div>
+      <div class="sub">${Math.round(done/total*100)}% (${done}/${total})</div>
+    </div>
+    <div class="kpi-card accent-blue">
+      <div class="lbl">진행 중</div>
+      <div class="val" style="color:#3D4FA6">${prog}</div>
+      <div class="sub">${Math.round(prog/total*100)}% (${prog}/${total})</div>
+    </div>
+    <div class="kpi-card accent-gray">
+      <div class="lbl">미시작 · 협의</div>
+      <div class="val" style="color:#888">${todo}</div>
+      <div class="sub">${Math.round(todo/total*100)}% · 협의 필요 ${hold}개</div>
+    </div>
+    <div class="kpi-card accent-orange">
+      <div class="lbl">기준 주차</div>
+      <div class="val" style="color:#ff5722">W${todayWeek}</div>
+      <div class="sub">${weekToLabel(todayWeek)} · 2026-05-15</div>
+    </div>
+  `;
+}
+
+function render() {
+  renderKPI();
+  const table = document.getElementById("gantt");
+  // 헤더
+  let h1 = `<tr><th style="min-width:420px; position:sticky; left:0; z-index:3;">업무</th>`;
+  let h2 = `<tr><th style="position:sticky; left:0; z-index:3;"></th>`;
+  for (let m = 0; m < 10; m++) {
+    h1 += `<th colspan="4">${months[m]}</th>`;
+    for (let w = 0; w < 4; w++) {
+      const wIdx = m * 4 + w;
+      const isQ = (w === 3);
+      const isToday = (wIdx === todayWeek);
+      h2 += `<th class="${isQ ? 'q-border' : ''} ${isToday ? 'today' : ''}">${w + 1}</th>`;
+    }
+  }
+  h1 += `</tr>`; h2 += `</tr>`;
+
+  // === 빨간선(todayWeek) 기준으로 일정 자동 보정 ===
+  // 100%: 채움 끝 ≤ todayWeek / 0%: 시작 > todayWeek / 진행중: 채움 끝 = todayWeek
+  function getDisplayRange(it) {
+    const p = it.pct ?? 0;
+    const dur = it.e - it.s + 1;
+    let s, e, fu;
+    if (p >= 100) {
+      if (it.e <= todayWeek) { s = it.s; e = it.e; }
+      else { e = todayWeek; s = e - dur + 1; }
+      fu = e;
+    } else if (p <= 0) {
+      if (it.s > todayWeek) { s = it.s; e = it.e; }
+      else { s = todayWeek + 1; e = s + dur - 1; }
+      fu = s - 1;
+    } else {
+      const filled = Math.max(1, Math.round(dur * p / 100));
+      s = todayWeek - filled + 1;
+      e = s + dur - 1;
+      fu = todayWeek;
+    }
+    return { s, e, fu };
+  }
+
+  // 바디
+  let body = "";
+  let currentCat = null;
+  items.forEach((item, idx) => {
+    const color = COLORS[item.track] || "#888";
+    const pct = item.pct ?? 0;
+    const pctClass = pct >= 100 ? 'pct-done' : pct >= 70 ? 'pct-high' : pct >= 25 ? 'pct-mid' : pct > 0 ? 'pct-low' : 'pct-zero';
+    // 빨간선 기준 보정된 일정 사용
+    const { s: dispS, e: dispE, fu: fillUntil } = getDisplayRange(item);
+
+    // === 카테고리 그룹 헤더 행 (cat이 바뀔 때만 삽입) ===
+    if (item.cat !== currentCat) {
+      currentCat = item.cat;
+      const catMeta = CATEGORIES.find(c => c.key === item.cat) || { name: item.cat };
+      const catItems = items.filter(i => i.cat === item.cat);
+      const catAvg = catItems.length ? Math.round(catItems.reduce((s,i)=>s+(i.pct||0),0) / catItems.length) : 0;
+      body += `<tr class="cat-row">`;
+      body += `<td class="cat-header-name"><span class="cat-title">${catMeta.name}</span><span class="cat-count">· ${catItems.length}개 항목</span></td>`;
+      body += `<td class="cat-header-blank" colspan="${totalWeeks}">평균 진척률 <span style="color:#1E2A78">${catAvg}%</span><span class="cat-avg-bar"><span class="cat-avg-fill" style="width:${catAvg}%"></span></span></td>`;
+      body += `</tr>`;
+    }
+
+    body += `<tr>`;
+    body += `<td class="item-name">`;
+    body += `<span class="track-tag" style="background:${color}">${item.track}</span>`;
+    body += `${item.name}`;
+    if (item.robot) body += `<span class="robot">${item.robot}</span>`;
+    if (item.hold) body += `<span class="hold-badge">${item.hold}</span>`;
+    body += `<span class="pct-badge ${pctClass}">${pct}%</span>`;
+    body += `</td>`;
+
+    for (let w = 0; w < totalWeeks; w++) {
+      const isQ = (w % 4 === 3);
+      const isToday = (w === todayWeek);
+      let cls = "week-cell";
+      if (isQ) cls += " q-border";
+      if (isToday) cls += " today-line";
+
+      if (w >= dispS && w <= dispE) {
+        cls += " bar";
+        if (w === dispS && w === dispE) cls += " bar-se";
+        else if (w === dispS) cls += " bar-s";
+        else if (w === dispE) cls += " bar-e";
+
+        // 진척률 기반 색상: 채워진 부분은 진한 색, 미완료 부분은 연한 색
+        const isFilled = w <= fillUntil;
+        const bg = isFilled ? color : color + '33';
+
+        body += `<td class="${cls}" style="background:${bg};"></td>`;
+      } else {
+        body += `<td class="${cls}"></td>`;
+      }
+    }
+    body += `</tr>`;
+  });
+
+  table.innerHTML = `<thead>${h1}${h2}</thead><tbody>${body}</tbody>`;
+
+  // 마일스톤 타임라인 (카테고리별 하위 내용)
+  // 가장 임박한 미래 마일스톤 주차 (오늘 포함) — 그 주차의 모든 마일스톤을 current로 강조
+  const upcomingWeeks = milestones.map(m => m.week).filter(w => w >= todayWeek);
+  const closestWeek = upcomingWeeks.length ? Math.min(...upcomingWeeks) : -1;
+
+  const timeline = document.getElementById("msTimeline");
+  timeline.innerHTML = milestones.map((ms, i) => {
+    const isPast = ms.week < todayWeek;
+    const isCurrent = ms.week === closestWeek;
+    const subsHtml = (ms.subs || []).map(sub => {
+      const c = COLORS[sub.track] || "#888";
+      const reqsHtml = sub.reqs ? `<span class="ms-reqs">[${sub.reqs}]</span>` : "";
+      return `<div class="ms-cat"><span class="ms-cat-tag" style="background:${c}">${sub.track}</span><span class="ms-cat-text">${sub.text} ${reqsHtml}</span></div>`;
+    }).join("");
+    return `
+      <div class="ms-item ${isPast ? 'active' : ''} ${isCurrent ? 'current' : ''} milestone">
+        <div class="ms-time">W${ms.week} · ${weekToLabel(ms.week)}</div>
+        <div class="ms-title">${ms.label}</div>
+        <div class="ms-desc">${subsHtml}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+window.addEventListener("load", render);
+
+function exportPNG(mode) {
+  const targets = {
+    full: document.getElementById("capture-full"),
+    gantt: document.getElementById("capture-gantt"),
+    milestones: document.getElementById("capture-milestones"),
+  };
+  const el = targets[mode];
+  if (!el) return;
+
+  const btn = event.target;
+  const origText = btn.textContent;
+  btn.textContent = "⏳ 캡처 중...";
+  btn.disabled = true;
+
+  html2canvas(el, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: "#ffffff",
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: el.scrollWidth,
+    windowHeight: el.scrollHeight,
+  }).then(canvas => {
+    const link = document.createElement("a");
+    const labels = { full:"전체", gantt:"간트차트", milestones:"마일스톤" };
+    const today = new Date().toISOString().slice(0,10);
+    link.download = `HACS2.0_로드맵_${labels[mode]}_${today}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    btn.textContent = origText;
+    btn.disabled = false;
+  }).catch(err => {
+    alert("캡처 실패: " + err.message);
+    btn.textContent = origText;
+    btn.disabled = false;
+  });
+}
+</script>
+</body>
+</html>
