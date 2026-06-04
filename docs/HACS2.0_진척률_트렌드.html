@@ -374,8 +374,6 @@ function renderKPI() {
   const kpis = [
     { label: "전체 업무", value: stats.total, sub: `기획${tasks.filter(t=>t.track==="기획").length} · ACS${tasks.filter(t=>t.track==="ACS").length} · UI${tasks.filter(t=>t.track==="UI").length} · PLC${tasks.filter(t=>t.track==="PLC").length} · 통합${tasks.filter(t=>t.track==="통합").length}`, color: "#2B3990", fill: 100 },
     { label: "완료율", value: stats.pct + "%", sub: `${stats.done}건 완료 / ${stats.progress}건 진행중 / ${stats.todo}건 대기`, color: "#2e7d32", fill: stats.pct },
-    { label: "계획 기대치", value: expected + "%", sub: `W${todayWeek} 기준 종료 예정 ${tasks.filter(t=>t.e<=todayWeek).length}건`, color: "#3D4FA6", fill: expected },
-    { label: "계획 대비 갭", value: (gap >= 0 ? "+" : "") + gap + "%p", sub: gap >= 0 ? "정상 진행" : "지연 주의", color: gap >= 0 ? "#2e7d32" : "#c62828", fill: Math.max(0, 50 + gap) },
     { label: "위험 항목", value: riskItems.length + "건", sub: `High ${riskItems.filter(r=>{const x=getRisk(r,todayWeek);return x&&x.level==="high"}).length} · Mid ${riskItems.filter(r=>{const x=getRisk(r,todayWeek);return x&&x.level==="mid"}).length}`, color: riskItems.length > 0 ? "#e65100" : "#2e7d32", fill: Math.max(0, 100 - riskItems.length * 10) }
   ];
 
