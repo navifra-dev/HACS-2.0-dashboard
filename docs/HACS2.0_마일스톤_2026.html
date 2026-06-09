@@ -237,7 +237,7 @@
   <div class="legend-item"><div class="legend-color" style="background:#3D4FA6"></div> 완료</div>
   <div class="legend-item"><div class="legend-color" style="background:#5A6BC4"></div> 진행중</div>
   <div class="legend-item"><div class="legend-color" style="background:#B8C1E8"></div> 예정</div>
-  <div class="legend-item"><span class="today-marker"></span> 현재 (3월 2주 / W11, 2026.03.14)</div>
+  <div class="legend-item"><span class="today-marker"></span> <span id="todayLegend">현재</span></div>
   <div class="legend-item"><div class="legend-color" style="background:#fdd835"></div> 산출물 체크포인트</div>
   <div class="legend-item" style="margin-left:12px; font-size:10px; color:#999;">편집모드 ON → ☰ 드래그로 행 순서 변경 · 바 드래그로 일정 이동 · 양 끝 드래그로 기간 조정 · 업무명 클릭 상세 편집</div>
 </div>
@@ -1159,6 +1159,14 @@ function exportXLSX() {
     html += '</div>';
   });
   area.innerHTML = html;
+})();
+
+// 현재 기준 날짜/주차 자동 갱신 (오늘 날짜 기준)
+(function(){
+  const d = new Date();
+  const ds = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+  const el = document.getElementById('todayLegend');
+  if (el) el.textContent = `현재 (${weekLabel(todayWeek)} / W${todayWeek}, ${ds})`;
 })();
 </script>
 </body>

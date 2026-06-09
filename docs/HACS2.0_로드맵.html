@@ -140,7 +140,7 @@
 <div class="header">
   <h1>H-ACS 2.0 프로젝트 로드맵</h1>
   <div class="sub">현대자동차그룹 H-ACS 2.0 개발 고도화 — 단계별 로봇 확장 계획</div>
-  <div class="date">2026년 3월 W11 기준 (2026.03.14) · Navifra</div>
+  <div class="date" id="baseDate">· Navifra</div>
 </div>
 
 <div class="main">
@@ -326,6 +326,14 @@ function exportPNG(mode) {
 function exportPDF() {
   window.print();
 }
+
+// 기준 날짜/주차 자동 갱신 (오늘 날짜 기준)
+(function(){
+  const d = new Date();
+  const ds = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+  const el = document.getElementById('baseDate');
+  if (el) el.textContent = `${d.getFullYear()}년 ${weekToLabel(todayWeek)} (W${todayWeek}) 기준 (${ds}) · Navifra`;
+})();
 </script>
 </body>
 </html>
