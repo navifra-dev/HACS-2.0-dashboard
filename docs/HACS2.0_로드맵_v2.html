@@ -196,7 +196,10 @@
 <script>
 const months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월"];
 const totalWeeks = 40;
-const todayWeek = 18; // 2026-05-15 (5월 3주차)
+// 오늘 날짜 기준 자동 계산 (월×4 + 월내 주차). 예: 2026-05-15 → W18(5월 3주)
+const _today = new Date();
+const todayWeek = _today.getMonth() * 4 + Math.min(3, Math.floor((_today.getDate() - 1) / 7));
+const todayStr = `${_today.getFullYear()}-${String(_today.getMonth()+1).padStart(2,'0')}-${String(_today.getDate()).padStart(2,'0')}`;
 const COLORS = { "기획":"#8B9AD8", "ACS":"#2B3990", "UI":"#5A6BC4", "PLC":"#4A5BC7", "통합":"#1E2A78" };
 
 // 카테고리 그룹 메타 (헤더 행에 사용) — items의 cat 키와 매칭
@@ -375,7 +378,7 @@ function renderKPI() {
     <div class="kpi-card accent-orange">
       <div class="lbl">기준 주차</div>
       <div class="val" style="color:#ff5722">W${todayWeek}</div>
-      <div class="sub">${weekToLabel(todayWeek)} · 2026-05-15</div>
+      <div class="sub">${weekToLabel(todayWeek)} · ${todayStr}</div>
     </div>
   `;
 }
