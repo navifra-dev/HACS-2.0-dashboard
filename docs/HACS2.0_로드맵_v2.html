@@ -285,6 +285,19 @@ const items = [
   { track:"통합", cat:"통합",   name:"울산 공장 현장 적용 (OLT)",                             reqs:"-",                    s:32, e:39, robot:"현장",   pct:0 },
 ];
 
+// ── 진척률 자동 계산 ──────────────────────────────────────────
+// 각 항목의 일정(시작 s ~ 종료 e 주차) 대비 오늘 주차(todayWeek)로 진척률을 산정.
+//   · 오늘 ≥ 종료주차  → 100% (완료)
+//   · 오늘 ≤ 시작주차  → 0%   (미시작)
+//   · 그 사이          → 경과 비율 (todayWeek - s) / (e - s)
+// 위에 적힌 pct 값은 참고용 원본이며, 아래 루프가 오늘 날짜 기준으로 덮어씁니다.
+items.forEach(it => {
+  if (it.e <= it.s)        it.pct = todayWeek >= it.e ? 100 : 0;
+  else if (todayWeek >= it.e) it.pct = 100;
+  else if (todayWeek <= it.s) it.pct = 0;
+  else it.pct = Math.round((todayWeek - it.s) / (it.e - it.s) * 100);
+});
+
 // 마일스톤 포인트 (주요 체크포인트) — 카테고리별 하위 내용 + 요구사항 ID
 const milestones = [
   { week: 11, label: "[단일 로봇] 시뮬레이션 주행", subs: [
