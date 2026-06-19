@@ -221,23 +221,23 @@ const CATEGORIES = [
 const items = [
   // ===== HPLC Link 플랫폼 (PLC 트랙) =====
   { track:"PLC", cat:"HPLC",    name:"PLC / TAG 등록 기능",                                   reqs:"1003.2",               s:14, e:18, robot:"", pct:100 },
-  { track:"PLC", cat:"HPLC",    name:"TAG 모니터링 (Polling / Event 하이브리드)",             reqs:"6.1, 23.2, 23.3",      s:15, e:20, robot:"", pct:60  },
+  { track:"PLC", cat:"HPLC",    name:"TAG 모니터링 (Polling / Event 하이브리드)",             reqs:"6.1, 23.2, 23.3",      s:15, e:20, robot:"", pct:95  },
   { track:"PLC", cat:"HPLC",    name:"추상 / 물리 Tag 자동 맵핑",                             reqs:"-",                    s:20, e:25, robot:"", pct:0   },
   { track:"PLC", cat:"HPLC",    name:"논리 / 가상 Tag 생성",                                  reqs:"23.1",                 s:15, e:20, robot:"", pct:0   },
-  { track:"PLC", cat:"HPLC",    name:"PLC Read / Write API",                                  reqs:"6.2",                  s:14, e:20, robot:"", pct:85  },
-  { track:"PLC", cat:"HPLC",    name:"실물 PLC 성능 테스트 (LS / 미쯔비시)",                  reqs:"-",                    s:16, e:29, robot:"", pct:35  },
+  { track:"PLC", cat:"HPLC",    name:"PLC Read / Write API",                                  reqs:"6.2",                  s:14, e:20, robot:"", pct:95  },
+  { track:"PLC", cat:"HPLC",    name:"실물 PLC 성능 테스트 (LS / 미쯔비시)",                  reqs:"-",                    s:16, e:29, robot:"", pct:60  },
 
   // ===== 트래픽 제어 (ACS 트랙) =====
   { track:"ACS", cat:"트래픽",  name:"경로 탐색 알고리즘",                                    reqs:"3.1",                  s:8,  e:16, robot:"단일", pct:100 },
-  { track:"ACS", cat:"트래픽",  name:"트래픽 제어 / 충돌 회피 로직",                          reqs:"1001.1, 1002.3, 4.1, 4.6, 4.7, 4.9, 18.1", s:12, e:23, robot:"멀티", pct:35 },
-  { track:"ACS", cat:"트래픽",  name:"V2Link 인터페이스",                                     reqs:"1002.4",               s:18, e:25, robot:"", pct:5  },
+  { track:"ACS", cat:"트래픽",  name:"트래픽 제어 / 충돌 회피 로직",                          reqs:"1001.1, 1002.3, 4.1, 4.6, 4.7, 4.9, 18.1", s:12, e:23, robot:"멀티", pct:60 },
+  { track:"ACS", cat:"트래픽",  name:"V2Link 인터페이스",                                     reqs:"1002.4",               s:18, e:25, robot:"", pct:10  },
 
   // ===== 로봇 및 미션 운영 (ACS 트랙) =====
-  { track:"ACS", cat:"미션운영", name:"로봇 할당 및 유연 미션 스케줄링",                      reqs:"2.1, 2.5, 2.6, 2.7, 2.8, 4.8, 1.13", s:12, e:23, robot:"", pct:40 },
+  { track:"ACS", cat:"미션운영", name:"로봇 할당 및 유연 미션 스케줄링",                      reqs:"2.1, 2.5, 2.6, 2.7, 2.8, 4.8, 1.13", s:12, e:23, robot:"", pct:65 },
   { track:"ACS", cat:"미션운영", name:"미션 이관 및 리라우팅 기능",                           reqs:"22.1, 19.1, 20.1",     s:20, e:27, robot:"", pct:0  },
-  { track:"ACS", cat:"미션운영", name:"우선순위 및 부하 분산 로직",                           reqs:"4.8",                  s:18, e:23, robot:"", pct:20 },
-  { track:"ACS", cat:"미션운영", name:"자동 충전 운영 로직",                                  reqs:"7.1",                  s:14, e:19, robot:"", pct:85 },
-  { track:"ACS", cat:"미션운영", name:"스케줄링 Sleep / Wakeup",                              reqs:"1004.1, 1004.2",       s:16, e:25, robot:"", pct:25 },
+  { track:"ACS", cat:"미션운영", name:"우선순위 및 부하 분산 로직",                           reqs:"4.8",                  s:18, e:23, robot:"", pct:35 },
+  { track:"ACS", cat:"미션운영", name:"자동 충전 운영 로직",                                  reqs:"7.1",                  s:14, e:19, robot:"", pct:95 },
+  { track:"ACS", cat:"미션운영", name:"스케줄링 Sleep / Wakeup",                              reqs:"1004.1, 1004.2",       s:16, e:25, robot:"", pct:40 },
 
   // ===== 외부 인터페이스 (ACS 트랙) =====
   { track:"ACS", cat:"외부IF",  name:"상위 시스템 연동 (MES / LMO 등 작업지시 시스템)",       reqs:"-",                    s:18, e:25, robot:"", pct:0  },
@@ -245,40 +245,40 @@ const items = [
   { track:"ACS", cat:"외부IF",  name:"관제 제공 API (통신/프로토콜/타입)",                    reqs:"9.1, 9.2, 9.3, 9.4, 9.5", s:8,  e:17, robot:"", pct:95 },
 
   // ===== 맵 편집기 (UI 트랙) =====
-  { track:"UI",  cat:"맵편집",  name:"맵 편집 및 편의 특화 기능",                             reqs:"5.4, 5.6, 5.11, 5.12, 5.14, 5.15, 5.16, 11.2", s:4,  e:23, robot:"", pct:35 },
+  { track:"UI",  cat:"맵편집",  name:"맵 편집 및 편의 특화 기능",                             reqs:"5.4, 5.6, 5.11, 5.12, 5.14, 5.15, 5.16, 11.2", s:4,  e:23, robot:"", pct:60 },
   { track:"UI",  cat:"맵편집",  name:"노드 / 링크 / 존 등 맵 객체 특성 관리",                 reqs:"5.7, 5.8, 5.9",        s:10, e:17, robot:"", pct:100 },
-  { track:"UI",  cat:"맵편집",  name:"멀티맵 및 다층 관제 구조 지원",                         reqs:"5.17, 5.19, 16.1",     s:10, e:21, robot:"", pct:25 },
+  { track:"UI",  cat:"맵편집",  name:"멀티맵 및 다층 관제 구조 지원",                         reqs:"5.17, 5.19, 16.1",     s:10, e:21, robot:"", pct:40 },
 
   // ===== 로봇 인터페이스 (ACS 트랙) =====
-  { track:"ACS", cat:"로봇IF",  name:"VDA5050 명령 해석 및 상태 매핑",                        reqs:"1.1, 1.3, 1.5, 1.11",  s:6,  e:20, robot:"단일", pct:40 },
+  { track:"ACS", cat:"로봇IF",  name:"VDA5050 명령 해석 및 상태 매핑",                        reqs:"1.1, 1.3, 1.5, 1.11",  s:6,  e:20, robot:"단일", pct:65 },
   { track:"ACS", cat:"로봇IF",  name:"미들웨어 HMI 연동",                                     reqs:"-",                    s:20, e:27, robot:"", pct:0, hold:"협의 필요" },
   { track:"ACS", cat:"로봇IF",  name:"OTA (FW 업데이트) 기능",                                reqs:"-",                    s:24, e:31, robot:"", pct:0  },
 
   // ===== 데이터 수집 및 분석 (ACS 트랙) =====
-  { track:"ACS", cat:"데이터",  name:"관제·로봇 알람, 이력, BMS / PHM 데이터",                reqs:"1005.1, 14.1, 14.2, 14.3, 14.4", s:14, e:23, robot:"", pct:60 },
-  { track:"ACS", cat:"데이터",  name:"통계 / 리포트 기능 (가동률 / CT / SOC / 부하)",         reqs:"15.2, 15.3, 15.4",     s:18, e:23, robot:"", pct:20 },
+  { track:"ACS", cat:"데이터",  name:"관제·로봇 알람, 이력, BMS / PHM 데이터",                reqs:"1005.1, 14.1, 14.2, 14.3, 14.4", s:14, e:23, robot:"", pct:95 },
+  { track:"ACS", cat:"데이터",  name:"통계 / 리포트 기능 (가동률 / CT / SOC / 부하)",         reqs:"15.2, 15.3, 15.4",     s:18, e:23, robot:"", pct:35 },
   { track:"ACS", cat:"데이터",  name:"Playback (로봇 / 미션 / PLC 이력 재현)",                reqs:"-",                    s:24, e:31, robot:"", pct:0  },
 
   // ===== UI 화면 기준 (UI 트랙) =====
   { track:"UI",  cat:"UI화면",  name:"계정 및 권한 관리",                                     reqs:"1007.1",               s:10, e:17, robot:"", pct:100 },
   { track:"UI",  cat:"UI화면",  name:"팔레트 및 적재물 관리",                                 reqs:"1003.3",               s:20, e:27, robot:"", pct:0   },
-  { track:"UI",  cat:"UI화면",  name:"단일 로봇 (형상 / 알람 / 풋프린트 / 적재물 등)",        reqs:"1003.1, 1.2, 1.4, 1.12, 1.14", s:8,  e:21, robot:"", pct:35 },
-  { track:"UI",  cat:"UI화면",  name:"부가 정보 (속도 감응형 Predicted Point)",               reqs:"1002.1",               s:20, e:25, robot:"", pct:5   },
+  { track:"UI",  cat:"UI화면",  name:"단일 로봇 (형상 / 알람 / 풋프린트 / 적재물 등)",        reqs:"1003.1, 1.2, 1.4, 1.12, 1.14", s:8,  e:21, robot:"", pct:60 },
+  { track:"UI",  cat:"UI화면",  name:"부가 정보 (속도 감응형 Predicted Point)",               reqs:"1002.1",               s:20, e:25, robot:"", pct:10   },
   { track:"UI",  cat:"UI화면",  name:"로봇 상태 모니터링 (단일 / 전체)",                      reqs:"1.15, 1006.1",         s:10, e:21, robot:"", pct:95 },
-  { track:"UI",  cat:"UI화면",  name:"미션 진척 모니터링 (단일 / 전체)",                      reqs:"2.3, 2.4",             s:14, e:23, robot:"", pct:35  },
-  { track:"UI",  cat:"UI화면",  name:"트래픽 상태 모니터링",                                  reqs:"1002.5, 1002.6",       s:20, e:27, robot:"", pct:5   },
+  { track:"UI",  cat:"UI화면",  name:"미션 진척 모니터링 (단일 / 전체)",                      reqs:"2.3, 2.4",             s:14, e:23, robot:"", pct:60  },
+  { track:"UI",  cat:"UI화면",  name:"트래픽 상태 모니터링",                                  reqs:"1002.5, 1002.6",       s:20, e:27, robot:"", pct:10   },
   { track:"UI",  cat:"UI화면",  name:"인터락 모니터링 (로봇 HMI 연동)",                       reqs:"12.1",                 s:18, e:25, robot:"", pct:0, hold:"협의 필요" },
   { track:"UI",  cat:"UI화면",  name:"알람 레벨 별 가시화 (정보 / 경고 / 에러 / 긴급)",       reqs:"1005.2, 21.1",         s:12, e:21, robot:"", pct:95  },
 
   // ===== 시스템 운영 (공통) — 신규 카테고리 =====
-  { track:"ACS", cat:"시스템",  name:"HACS v2.0 아키텍처 (Agents / Services 구조)",           reqs:"1000.1, 1000.2",       s:1,  e:17, robot:"", pct:85  },
+  { track:"ACS", cat:"시스템",  name:"HACS v2.0 아키텍처 (Agents / Services 구조)",           reqs:"1000.1, 1000.2",       s:1,  e:17, robot:"", pct:95  },
   { track:"ACS", cat:"시스템",  name:"시스템 상태 관리 (Running / Paused / 비정상 종료 복구)", reqs:"8.1",                  s:6,  e:17, robot:"", pct:95 },
-  { track:"ACS", cat:"시스템",  name:"시스템 파라미터 관리 (Global / Robot 계층)",            reqs:"8.2",                  s:14, e:23, robot:"", pct:35  },
+  { track:"ACS", cat:"시스템",  name:"시스템 파라미터 관리 (Global / Robot 계층)",            reqs:"8.2",                  s:14, e:23, robot:"", pct:60  },
   { track:"ACS", cat:"시스템",  name:"ACS Server 자동 실행 (Watcher 기반)",                   reqs:"13.1",                 s:4,  e:15, robot:"", pct:95 },
   { track:"ACS", cat:"시스템",  name:"ACS Server 상태 모니터링 (Self-Healing)",               reqs:"13.2",                 s:4,  e:15, robot:"", pct:95 },
 
   // ===== 통합·검증 =====
-  { track:"통합", cat:"통합",   name:"5월 시뮬레이션 — 6개 서버 통합 (m/w·ros2core·hacs·v2io·v2v·care)", reqs:"-", s:16, e:19, robot:"시뮬", pct:60 },
+  { track:"통합", cat:"통합",   name:"5월 시뮬레이션 — 6개 서버 통합 (m/w·ros2core·hacs·v2io·v2v·care)", reqs:"-", s:16, e:19, robot:"시뮬", pct:95 },
   { track:"통합", cat:"통합",   name:"실 로봇 연계 + E2E 통합",                               reqs:"-",                    s:24, e:31, robot:"실 로봇", pct:0 },
   { track:"통합", cat:"통합",   name:"천안·아산 공장 현장 적용 (OLT)",                        reqs:"-",                    s:32, e:39, robot:"현장",   pct:0 },
   { track:"통합", cat:"통합",   name:"화성 공장 현장 적용 (OLT)",                             reqs:"-",                    s:32, e:39, robot:"현장",   pct:0 },
