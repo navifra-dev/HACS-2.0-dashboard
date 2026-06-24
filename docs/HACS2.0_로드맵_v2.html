@@ -161,8 +161,12 @@
     <div class="desc">대규모 부하 테스트<br/>통합 관제 · 서버 안정성</div>
   </div>
   <div class="s-card" style="border-color:#1E2A78">
-    <div class="month">8월~</div>
-    <div class="desc">E2E 통합 테스트<br/>화성/울산 공장 OLT</div>
+    <div class="month">8~9월</div>
+    <div class="desc">에뮬레이션 테스트<br/>실 로봇 테스트/디버깅</div>
+  </div>
+  <div class="s-card" style="border-color:#1E2A78">
+    <div class="month">10~11월</div>
+    <div class="desc">화성 공장 OLT (10월)<br/>울산 공장 OLT (11월)</div>
   </div>
 </div>
 
@@ -178,7 +182,7 @@
   <div class="legend-item"><div class="legend-color" style="background:#4A5BC7"></div> H-PLC</div>
   <div class="legend-item"><div class="legend-color" style="background:#1E2A78"></div> 통합·검증</div>
   <div class="legend-item"><div class="legend-color" style="background:#8B9AD8"></div> 기획</div>
-  <div class="legend-item"><span style="display:inline-block;width:3px;height:14px;background:#ff5722;margin-right:2px"></span> 현재 (5/15 · W18)</div>
+  <div class="legend-item"><span style="display:inline-block;width:3px;height:14px;background:#ff5722;margin-right:2px"></span> <span id="legendToday">현재</span></div>
 </div>
 
 </div><!-- /capture-gantt -->
@@ -194,8 +198,8 @@
 </div><!-- /capture-full -->
 
 <script>
-const months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월"];
-const totalWeeks = 40;
+const months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월"];
+const totalWeeks = months.length * 4; // 11개월 × 4주 = 44주
 // 오늘 날짜 기준 자동 계산 (월×4 + 월내 주차). 예: 2026-05-15 → W18(5월 3주)
 const _today = new Date();
 const todayWeek = _today.getMonth() * 4 + Math.min(3, Math.floor((_today.getDate() - 1) / 7));
@@ -280,9 +284,10 @@ const items = [
   // ===== 통합·검증 =====
   { track:"통합", cat:"통합",   name:"5월 시뮬레이션 — 6개 서버 통합 (m/w·ros2core·hacs·v2io·v2v·care)", reqs:"-", s:16, e:19, robot:"시뮬", pct:95 },
   { track:"통합", cat:"통합",   name:"실 로봇 연계 + E2E 통합",                               reqs:"-",                    s:24, e:31, robot:"실 로봇", pct:0 },
-  { track:"통합", cat:"통합",   name:"천안·아산 공장 현장 적용 (OLT)",                        reqs:"-",                    s:32, e:39, robot:"현장",   pct:0 },
-  { track:"통합", cat:"통합",   name:"화성 공장 현장 적용 (OLT)",                             reqs:"-",                    s:32, e:39, robot:"현장",   pct:0 },
-  { track:"통합", cat:"통합",   name:"울산 공장 현장 적용 (OLT)",                             reqs:"-",                    s:32, e:39, robot:"현장",   pct:0 },
+  { track:"통합", cat:"통합",   name:"에뮬레이션 테스트 (다수 로봇 가상환경 시나리오·부하 검증)", reqs:"-",                s:26, e:33, robot:"에뮬",   pct:0 },
+  { track:"통합", cat:"통합",   name:"실 로봇 테스트 / 디버깅 (현장 투입 전 실기 검증·안정화)",   reqs:"-",                s:32, e:39, robot:"실 로봇", pct:0 },
+  { track:"통합", cat:"통합",   name:"화성 공장 현장 적용 (OLT)",                             reqs:"-",                    s:36, e:39, robot:"현장",   pct:0 },
+  { track:"통합", cat:"통합",   name:"울산 공장 현장 적용 (OLT)",                             reqs:"-",                    s:40, e:43, robot:"현장",   pct:0 },
 ];
 
 // 마일스톤 포인트 (주요 체크포인트) — 카테고리별 하위 내용 + 요구사항 ID
@@ -317,14 +322,17 @@ const milestones = [
     { track:"PLC", text:"H-PLC 다중 인스턴스 · 단일 서버 통합 · Write 기능", reqs:"6.1, 1003.2" },
     { track:"UI", text:"Playback · 통계/차트 · Alarm 모니터링 · 부가 기능 완성", reqs:"15.1~15.4, 14.1a~14.4, 16.1, 1005.1" },
   ]},
-  { week: 33, label: "실 로봇 E2E 테스트", subs: [
-    { track:"ACS", text:"VDA5050 실 로봇 통신 검증", reqs:"" },
+  { week: 33, label: "에뮬레이션 + 실 로봇 검증 (철저한 검증 단계)", subs: [
+    { track:"통합", text:"에뮬레이션 테스트: 다수 로봇 가상환경에서 시나리오·부하·예외 상황 반복 검증", reqs:"" },
+    { track:"통합", text:"실 로봇 테스트 / 디버깅: 현장 투입 전 실기 통신·주행·안정성 검증 및 결함 디버깅", reqs:"" },
+    { track:"ACS", text:"VDA5050 실 로봇 통신 검증 · ACS↔UI↔PLC 전체 연계 E2E 시나리오", reqs:"" },
     { track:"PLC", text:"실 PLC 장비 연동 검증", reqs:"" },
-    { track:"UI", text:"전체 UI 통합 테스트", reqs:"" },
-    { track:"통합", text:"ACS↔UI↔PLC 전체 연계 E2E 시나리오 검증", reqs:"" },
   ]},
-  { week: 39, label: "천안·아산 / 화성 / 울산 공장 OLT 완료", subs: [
-    { track:"통합", text:"3개 공장(천안·아산 · 화성 · 울산) 현장 환경 배포 · 운영 테스트 · 최종 검수 보고서", reqs:"" },
+  { week: 39, label: "화성 공장 OLT (10월)", subs: [
+    { track:"통합", text:"화성 공장 현장 환경 배포 · 운영 테스트(OLT) · 검수", reqs:"" },
+  ]},
+  { week: 43, label: "울산 공장 OLT 완료 (11월)", subs: [
+    { track:"통합", text:"울산 공장 현장 적용(OLT) · 최종 검수 보고서 — 화성·울산 2개 공장 OLT 완료", reqs:"" },
   ]},
 ];
 
@@ -385,11 +393,13 @@ function renderKPI() {
 
 function render() {
   renderKPI();
+  const lt = document.getElementById("legendToday");
+  if (lt) lt.textContent = `현재 (${todayStr.slice(5).replace('-','/')} · W${todayWeek})`;
   const table = document.getElementById("gantt");
   // 헤더
   let h1 = `<tr><th style="min-width:420px; position:sticky; left:0; z-index:3;">업무</th>`;
   let h2 = `<tr><th style="position:sticky; left:0; z-index:3;"></th>`;
-  for (let m = 0; m < 10; m++) {
+  for (let m = 0; m < months.length; m++) {
     h1 += `<th colspan="4">${months[m]}</th>`;
     for (let w = 0; w < 4; w++) {
       const wIdx = m * 4 + w;
