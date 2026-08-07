@@ -250,7 +250,7 @@ const items = [
   // ===== 외부 인터페이스 (ACS 트랙) =====
   { track:"ACS", cat:"외부IF",  name:"상위 시스템 연동 (MES / LMO 등 작업지시 시스템)",       reqs:"-",                    s:18, e:25, robot:"", pct:0  },
   { track:"ACS", cat:"외부IF",  name:"기타 장치 인터페이스 (엘베 / 자동문 등)",               reqs:"-",                    s:20, e:27, robot:"", pct:0  },
-  { track:"ACS", cat:"외부IF",  name:"관제 제공 API (통신/프로토콜/타입)",                    reqs:"9.1, 9.2, 9.3, 9.4, 9.5", s:8,  e:17, robot:"", pct:95 },
+  { track:"ACS", cat:"외부IF",  name:"관제 제공 API (통신/프로토콜/타입)",                    reqs:"9.1, 9.2, 9.3, 9.4, 9.5", s:8,  e:17, robot:"", pct:100 },
 
   // ===== 맵 편집기 (UI 트랙) =====
   { track:"UI",  cat:"맵편집",  name:"맵 편집 및 편의 특화 기능",                             reqs:"5.4, 5.6, 5.11, 5.12, 5.14, 5.15, 5.16, 11.2", s:4,  e:23, robot:"", pct:90 },
@@ -279,10 +279,10 @@ const items = [
   { track:"UI",  cat:"UI화면",  name:"알람 레벨 별 가시화 (정보 / 경고 / 에러 / 긴급)",       reqs:"1005.2, 21.1",         s:12, e:21, robot:"", pct:95  },
 
   // ===== 시스템 운영 (공통) — 신규 카테고리 =====
-  { track:"ACS", cat:"시스템",  name:"HACS v2.0 아키텍처 (Agents / Services 구조)",           reqs:"1000.1, 1000.2",       s:1,  e:17, robot:"", pct:95  },
-  { track:"ACS", cat:"시스템",  name:"시스템 상태 관리 (Running / Paused / 비정상 종료 복구)", reqs:"8.1",                  s:6,  e:17, robot:"", pct:95 },
+  { track:"ACS", cat:"시스템",  name:"HACS v2.0 아키텍처 (Agents / Services 구조)",           reqs:"1000.1, 1000.2",       s:1,  e:17, robot:"", pct:100  },
+  { track:"ACS", cat:"시스템",  name:"시스템 상태 관리 (Running / Paused / 비정상 종료 복구)", reqs:"8.1",                  s:6,  e:17, robot:"", pct:100 },
   { track:"ACS", cat:"시스템",  name:"시스템 파라미터 관리 (Global / Robot 계층)",            reqs:"8.2",                  s:14, e:23, robot:"", pct:70  },
-  { track:"ACS", cat:"시스템",  name:"ACS Server 자동 실행 (Watcher 기반)",                   reqs:"13.1",                 s:4,  e:15, robot:"", pct:95 },
+  { track:"ACS", cat:"시스템",  name:"ACS Server 자동 실행 (Watcher 기반)",                   reqs:"13.1",                 s:4,  e:15, robot:"", pct:100 },
   { track:"ACS", cat:"시스템",  name:"ACS Server 상태 모니터링 (Self-Healing)",               reqs:"13.2",                 s:4,  e:15, robot:"", pct:95 },
 
   // ===== 통합·검증 =====
