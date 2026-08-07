@@ -227,18 +227,18 @@ const items = [
   { track:"PLC", cat:"HPLC",    name:"PLC / TAG 등록 기능",                                   reqs:"1003.2",               s:14, e:18, robot:"", pct:100 },
   { track:"PLC", cat:"HPLC",    name:"TAG 모니터링 (Polling / Event 하이브리드)",             reqs:"6.1, 23.2, 23.3",      s:15, e:20, robot:"", pct:95  },
   { track:"PLC", cat:"HPLC",    name:"추상 / 물리 Tag 자동 맵핑",                             reqs:"-",                    s:29, e:30, robot:"", pct:0   },
-  { track:"PLC", cat:"HPLC",    name:"논리 / 가상 Tag 생성",                                  reqs:"23.1",                 s:28, e:30, robot:"", pct:15   },
+  { track:"PLC", cat:"HPLC",    name:"논리 / 가상 Tag 생성",                                  reqs:"23.1",                 s:28, e:30, robot:"", pct:33   },
   { track:"PLC", cat:"HPLC",    name:"PLC Read / Write API",                                  reqs:"6.2",                  s:22, e:28, robot:"", pct:100  },
   { track:"PLC", cat:"HPLC",    name:"실물 PLC 성능 테스트 (LS / 미쯔비시)",                  reqs:"-",                    s:16, e:29, robot:"", pct:92  },
 
   // ===== 트래픽 제어 (ACS 트랙) =====
   { track:"ACS", cat:"트래픽",  name:"경로 탐색 알고리즘",                                    reqs:"3.1",                  s:8,  e:16, robot:"단일", pct:100 },
   { track:"ACS", cat:"트래픽",  name:"목적지 스케줄링 (작업 목적지 배정·순서화)",             reqs:"1001.1, 1002.3",       s:12, e:20, robot:"멀티", pct:72 },
-  { track:"ACS", cat:"트래픽",  name:"점유/해제 기반 충돌 회피",                              reqs:"4.6, 4.7, 4.9",        s:14, e:23, robot:"멀티", pct:68 },
-  { track:"ACS", cat:"트래픽",  name:"그래프 기반 동적 트래픽 제어",                          reqs:"4.1, 18.1",            s:24, e:31, robot:"멀티", pct:60 },
-  { track:"ACS", cat:"트래픽",  name:"점유 기반 우회경로 재생성",                             reqs:"4.1, 19.1",            s:20, e:27, robot:"멀티", pct:61 },
+  { track:"ACS", cat:"트래픽",  name:"점유/해제 기반 충돌 회피",                              reqs:"4.6, 4.7, 4.9",        s:14, e:23, robot:"멀티", pct:70 },
+  { track:"ACS", cat:"트래픽",  name:"그래프 기반 동적 트래픽 제어",                          reqs:"4.1, 18.1",            s:24, e:31, robot:"멀티", pct:63 },
+  { track:"ACS", cat:"트래픽",  name:"점유 기반 우회경로 재생성",                             reqs:"4.1, 19.1",            s:20, e:27, robot:"멀티", pct:63 },
   { track:"ACS", cat:"트래픽",  name:"ETA 기반 경로 탐색",                                    reqs:"24.1~24.7",            s:28, e:35, robot:"멀티", pct:0 },
-  { track:"ACS", cat:"트래픽",  name:"V2Link 인터페이스",                                     reqs:"1002.4",               s:28, e:31, robot:"", pct:20  },
+  { track:"ACS", cat:"트래픽",  name:"V2Link 인터페이스",                                     reqs:"1002.4",               s:28, e:31, robot:"", pct:25  },
 
   // ===== 로봇 및 미션 운영 (ACS 트랙) =====
   { track:"ACS", cat:"미션운영", name:"로봇 할당 및 유연 미션 스케줄링",                      reqs:"2.1, 2.5, 2.6, 2.7, 2.8, 4.8, 1.13", s:12, e:23, robot:"", pct:95 },
