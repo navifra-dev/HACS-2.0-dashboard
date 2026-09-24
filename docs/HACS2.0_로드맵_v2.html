@@ -245,10 +245,10 @@ const items = [
   { track:"ACS", cat:"미션운영", name:"미션 이관 및 리라우팅 기능",                           reqs:"22.1, 19.1, 20.1",     s:20, e:27, robot:"", pct:100  },
   { track:"ACS", cat:"미션운영", name:"우선순위 및 부하 분산 로직",                           reqs:"4.8",                  s:18, e:23, robot:"", pct:100 },
   { track:"ACS", cat:"미션운영", name:"자동 충전 운영 로직",                                  reqs:"7.1",                  s:23, e:28, robot:"", pct:100 },
-  { track:"ACS", cat:"미션운영", name:"스케줄링 Sleep / Wakeup",                              reqs:"1004.1, 1004.2",       s:26, e:31, robot:"", pct:77 },
+  { track:"ACS", cat:"미션운영", name:"스케줄링 Sleep / Wakeup",                              reqs:"1004.1, 1004.2",       s:26, e:31, robot:"", pct:85 },
 
   // ===== 외부 인터페이스 (ACS 트랙) =====
-  { track:"ACS", cat:"외부IF",  name:"상위 시스템 연동 (MES / LMO 등 작업지시 시스템)",       reqs:"-",                    s:18, e:25, robot:"", pct:17  },
+  { track:"ACS", cat:"외부IF",  name:"상위 시스템 연동 (MES / LMO 등 작업지시 시스템)",       reqs:"-",                    s:18, e:25, robot:"", pct:22  },
   { track:"ACS", cat:"외부IF",  name:"기타 장치 인터페이스 (엘베 / 자동문 등)",               reqs:"-",                    s:20, e:27, robot:"", pct:29  },
   { track:"ACS", cat:"외부IF",  name:"관제 제공 API (통신/프로토콜/타입)",                    reqs:"9.1, 9.2, 9.3, 9.4, 9.5", s:19,  e:28, robot:"", pct:100 },
 
@@ -264,12 +264,12 @@ const items = [
 
   // ===== 데이터 수집 및 분석 (ACS 트랙) =====
   { track:"ACS", cat:"데이터",  name:"관제·로봇 알람, 이력, BMS / PHM 데이터",                reqs:"1005.1, 14.1, 14.2, 14.3, 14.4", s:14, e:23, robot:"", pct:100 },
-  { track:"ACS", cat:"데이터",  name:"통계 / 리포트 기능 (가동률 / CT / SOC / 부하)",         reqs:"15.2, 15.3, 15.4",     s:18, e:23, robot:"", pct:88 },
-  { track:"ACS", cat:"데이터",  name:"Playback (로봇 / 미션 / PLC 이력 재현)",                reqs:"-",                    s:28, e:31, robot:"", pct:58  },
+  { track:"ACS", cat:"데이터",  name:"통계 / 리포트 기능 (가동률 / CT / SOC / 부하)",         reqs:"15.2, 15.3, 15.4",     s:18, e:23, robot:"", pct:93 },
+  { track:"ACS", cat:"데이터",  name:"Playback (로봇 / 미션 / PLC 이력 재현)",                reqs:"-",                    s:28, e:31, robot:"", pct:68  },
 
   // ===== UI 화면 기준 (UI 트랙) =====
   { track:"UI",  cat:"UI화면",  name:"계정 및 권한 관리",                                     reqs:"1007.1",               s:10, e:17, robot:"", pct:100 },
-  { track:"UI",  cat:"UI화면",  name:"팔레트 및 적재물 관리",                                 reqs:"1003.3",               s:20, e:27, robot:"", pct:17   },
+  { track:"UI",  cat:"UI화면",  name:"팔레트 및 적재물 관리",                                 reqs:"1003.3",               s:20, e:27, robot:"", pct:27   },
   { track:"UI",  cat:"UI화면",  name:"단일 로봇 (형상 / 알람 / 풋프린트 / 적재물 등)",        reqs:"1003.1, 1.2, 1.4, 1.12, 1.14", s:8,  e:21, robot:"", pct:87 },
   { track:"UI",  cat:"UI화면",  name:"부가 정보 (속도 감응형 Predicted Point)",               reqs:"1002.1",               s:23, e:28, robot:"", pct:100   },
   { track:"UI",  cat:"UI화면",  name:"로봇 상태 모니터링 (단일 / 전체)",                      reqs:"1.15, 1006.1",         s:17, e:28, robot:"", pct:100 },
